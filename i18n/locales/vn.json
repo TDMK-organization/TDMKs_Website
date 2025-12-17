@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "home_page": "Trang Chủ",
+    "abouts_us": "Giới Thiệu",
+    "service": "Dịch Vụ & Giải Pháp",
+    "projects_us": "Dự Án",
+    "forum": "Chia Sẻ Kiến Thức",
+    "recruitment": "Tuyển Dụng",
+    "contact_us": "Liên Hệ Với Chúng Tôi"
+  },
+  "pages": {
+    "titles": {
+      "home_page": "Dịch Vụ Và Giải Pháp - TDMK"
+    }
+  }
+}
