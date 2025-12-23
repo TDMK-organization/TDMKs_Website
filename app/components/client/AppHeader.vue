@@ -45,6 +45,23 @@ const items = computed(() => [
         to: "/products",
         label: t("nav.projects_us"),
         active: route.path.startsWith("/products"),
+        children: [
+            {
+                label: "General",
+            },
+            {
+                label: "Members",
+            },
+            {
+                label: "Notifications",
+            },
+            {
+                label: "Notifications",
+            },
+            {
+                label: "Notifications",
+            },
+        ],
     },
     {
         title: "Forum",
