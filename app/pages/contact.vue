@@ -1,13 +1,4 @@
 <template>
-    <div>
-        this page is contact
-    </div>
+    <PagesContactusPage />
 </template>
-<script>
-export default {
-    
-}
-</script>
-<style scoped>
-
-</style>
+<script setup></script>

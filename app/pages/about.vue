@@ -4,7 +4,7 @@
 // });
 </script>
 <template>
-    <div>this is about page</div>
+    <PagesAboutusDefaultPage/>
 </template>
 <script>
 export default {};

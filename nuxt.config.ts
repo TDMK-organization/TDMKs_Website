@@ -5,10 +5,12 @@ export default defineNuxtConfig({
     compatibilityDate: "2025-07-15",
     devtools: { enabled: true },
     css: ["~/assets/css/main.css"],
-    modules: ["@nuxtjs/i18n", "@nuxt/image", "@nuxt/ui", "nuxt-tiptap-editor"],
+    modules: ["@nuxtjs/i18n", "@nuxt/image", "@nuxt/ui"],
+ 
     vite: {
         plugins: [tailwindcss()],
     },
+
     i18n: {
         detectBrowserLanguage: {
             useCookie: true,
