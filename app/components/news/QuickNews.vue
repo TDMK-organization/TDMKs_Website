@@ -1,9 +1,53 @@
+<script setup>
+// Khai báo props với giá trị mặc định cho 'main' và 'posts'
+const props = defineProps({
+    loading: {
+        type: Boolean,
+        default: false,
+    },
+    main: {
+        type: Object,
+        default: () => ({
+            title: "Tiêu đề mặc định",
+            description: "Mô tả mặc định cho bài viết chính.",
+            srcImage: "/tailwindcss-v4.svg",
+            altImage: "Alt text mặc định",
+        }),
+    },
+    posts: {
+        type: Array,
+        default: () => [
+            {
+                to: "/posts/1",
+                title: "Nuxt Icon v1",
+                description: "Khám phá Nuxt Icon phiên bản mới nhất.",
+                image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
+                date: "2024-11-25",
+            },
+            {
+                to: "/posts/1",
+                title: "Nuxt Icon v1",
+                description: "Khám phá Nuxt Icon phiên bản mới nhất.",
+                image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
+                date: "2024-11-25",
+            },
+            {
+                to: "/posts/1",
+                title: "Nuxt Icon v1",
+                description: "Khám phá Nuxt Icon phiên bản mới nhất.",
+                image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
+                date: "2024-11-25",
+            },
+        ],
+    },
+});
+</script>
 <template>
     <div class="bg_quickNews">
         <div class="left_QN">
             <UPageCard
-                title="Tailwind CSS"
-                description="Nuxt UI integrates with latest Tailwind CSS v4, bringing significant improvements."
+                :title="main.title"
+                :description="main.description"
                 icon="i-simple-icons-tailwindcss"
                 orientation="vertical"
                 reverse
@@ -11,8 +55,8 @@
                 spotlight-color="primary"
             >
                 <img
-                    src="/tailwindcss-v4.svg"
-                    alt="Tailwind CSS"
+                    :src="main.srcImage"
+                    :alt="main.altImage"
                     class="w-full h-auto mt-10"
                 />
             </UPageCard>
@@ -26,6 +70,7 @@
                 reverse
             >
                 <template #title>
+                    
                     <div class="title">
                         {{ item.title }}
                     </div></template
@@ -44,38 +89,7 @@
         </div>
     </div>
 </template>
-<script>
-export default {
-    data() {
-        return {
-            posts: ref([
-                {
-                    to: "/posts/1",
-                    title: "Nuxt Icon v1 Nuxt Icon v1 Nuxt Icon v1  Nuxt Icon v1",
-                    description:
-                        "Discover Nuxt Icon v1sssss Discover Nuxt Icon v1sssss Discover Nuxt Icon v1sssss !Discover Nuxt Icon v1sssss Discover Nuxt Icon v1sssss Discover Nuxt Icon v1sssss !Discover Nuxt Icon v1sssss Discover Nuxt Icon v1sssss Discover Nuxt Icon v1sssss !",
-                    image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
-                    date: "2024-11-25",
-                },
-                {
-                    to: "/posts/2",
-                    title: "Nuxt 3.14",
-                    description: "Nuxt 3.14 is out!",
-                    image: "https://nuxt.com/assets/blog/v3.14.png",
-                    date: "2024-11-04",
-                },
-                {
-                    to: "/posts/3",
-                    title: "Nuxt 3.13",
-                    description: "Nuxt 3.13 is out!",
-                    image: "https://nuxt.com/assets/blog/v3.13.png",
-                    date: "2024-08-22",
-                },
-            ]),
-        };
-    },
-};
-</script>
+
 <style scoped>
 /* 
 .bg_quickNews {

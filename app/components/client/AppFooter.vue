@@ -30,6 +30,28 @@
     </UFooter>
 </template>
 <script>
-export default {};
+export default {
+    data() {
+        return {
+            items: [
+                {
+                    label: "tdmk.vn",
+                    to: "https://tdmk.vn/",
+                    target: "_blank",
+                },
+                {
+                    label: "Playground",
+                    to: "https://stackblitz.com/edit/nuxt-ui",
+                    target: "_blank",
+                },
+                {
+                    label: "Releases",
+                    to: "https://github.com/nuxt/ui/releases",
+                    target: "_blank",
+                },
+            ],
+        };
+    },
+};
 </script>
 <style lang=""></style>

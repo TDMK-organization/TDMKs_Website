@@ -2,11 +2,23 @@ import tailwindcss from "@tailwindcss/vite";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 export default defineNuxtConfig({
+    runtimeConfig: {
+        // Các biến ở đây chỉ khả dụng ở phía Server (Secret keys)
+        apiSecret: "",
+
+        public: {
+            // Các biến ở đây sẽ khả dụng ở cả Client và Server
+            apiBase: "http://localhost:5000",
+        },
+    },
+
     compatibilityDate: "2025-07-15",
     devtools: { enabled: true },
     css: ["~/assets/css/main.css"],
     modules: ["@nuxtjs/i18n", "@nuxt/image", "@nuxt/ui"],
- 
+
+  
+
     vite: {
         plugins: [tailwindcss()],
     },

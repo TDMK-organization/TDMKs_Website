@@ -26,6 +26,7 @@ const items = computed(() => [
     {
         title: "Home",
         to: "/",
+
         label: t("nav.home_page"),
     },
     {
@@ -47,6 +48,7 @@ const items = computed(() => [
         active: route.path.startsWith("/products"),
         children: [
             {
+                icon: "i-lucide-book-open",
                 label: "General",
             },
             {

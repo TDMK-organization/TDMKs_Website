@@ -10,13 +10,18 @@
 
         <UPageBody>
             <div style="display: flex; flex-direction: column">
-                <NewsQuickNews />
+                <NewsQuickNews
+                    :main="data.main"
+                    :posts="data.posts"
+                    :loading="pending"
+                />
                 <NewsListNews />
             </div>
         </UPageBody>
     </LayoutPageLayout>
 </template>
 <script setup>
+const { data, pending, error } = await useFetch("/api/post/forum");
 const links = ref([
     {
         label: "GitHub",

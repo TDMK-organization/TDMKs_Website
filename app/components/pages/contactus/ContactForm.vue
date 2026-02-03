@@ -10,7 +10,7 @@
                     />
                 </div>
                 <div style="width: 60%; margin: 40px;"" class="form">
-                    <Header text="Thông tin liên hệ" />
+                    <Header text="Để lại thông tin liên hệ" />
 
                     <UForm
                         :schema="schema"
