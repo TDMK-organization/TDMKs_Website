@@ -20,4 +20,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: your-docker-username/your-app-name:latest
+          tags: gitzno/tdmks_website:latest
