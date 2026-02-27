@@ -27,8 +27,10 @@ export default {
                 );
 
                 alert("Đăng nhập thành công!");
-                // const token = useCookie("auth_token");
-                // token.value = response.token;
+                const token = useCookie("auth_token");
+                alert("Token nhận được:", response.data.token);
+                token.value = response.data.token;
+                console.log("Token đã lưu vào cookie:", response.data.token);
             } catch (error) {
                 console.error("Lỗi đăng nhập:", error);
                 alert("Thông tin đăng nhập không chính xác.");
@@ -58,5 +60,10 @@ export default {
         };
     },
 };
+</script>
+<script setup>
+definePageMeta({
+    middleware: "guest", // Gọi middleware đã tạo ở trên
+});
 </script>
 <style lang=""></style>
