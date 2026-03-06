@@ -1,8 +1,9 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-  const token = useCookie('auth_token')
+export default defineNuxtRouteMiddleware(async (event) => {
+    // 1. Kiểm tra và xóa session cũ nếu tồn tại
+    const { session, clear } = useUserSession();
 
-  // Nếu đã có token và đang ở trang login, đẩy về dashboard
-  if (token.value && to.path === '/login') {
-    return navigateTo('/')
-  }
-})
+    if (session.user) {
+        // console.log("Phát hiện session cũ, đang tiến hành xóa...");
+        await clear();
+    }
+});

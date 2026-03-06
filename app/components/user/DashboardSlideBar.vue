@@ -72,6 +72,9 @@ export default {
                         label: "Home",
                         icon: "i-lucide-house",
                         active: true,
+                        to: {
+                            path: "/user",
+                        },
                     },
                     {
                         label: "Inbox",
@@ -83,18 +86,23 @@ export default {
                         icon: "i-lucide-users",
                     },
                     {
-                        label: "Bài Viết",
+                        label: "Danh sách bài viết",
                         icon: "i-lucide-settings",
                         defaultOpen: true,
                         children: [
                             {
-                                label: "General",
+                                label: "Forum",
+                                to: {
+                                    path: "/user/posts",
+                                    query: { category: "forum" },
+                                },
                             },
                             {
-                                label: "Members",
-                            },
-                            {
-                                label: "Notifications",
+                                label: "News",
+                                to: {
+                                    path: "/user/posts",
+                                    query: { category: "news" },
+                                },
                             },
                         ],
                     },

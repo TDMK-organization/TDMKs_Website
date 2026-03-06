@@ -1,12 +1,7 @@
 <template>
     <UDashboardGroup>
         <UserDashboardSlideBar />
-        <UDashboardPanel>
-            <UserAppHeader >
-
-            </UserAppHeader>
-            <slot />
-        </UDashboardPanel>
+        <slot />
     </UDashboardGroup>
 </template>
 <script>
