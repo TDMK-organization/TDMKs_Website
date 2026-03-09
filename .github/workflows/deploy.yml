@@ -51,6 +51,7 @@ jobs:
             docker run -d \
               --name my-app-container \
               -p 3000:3000 \
+              -e NUXT_SESSION_PASSWORD="${{ secrets.NUXT_SESSION_PASSWORD }}" \
               --restart always \
               gitzno/tdmks_website:latest
             
