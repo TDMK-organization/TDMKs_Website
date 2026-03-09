@@ -103,7 +103,7 @@ export default {
                                     path: "/user/posts",
                                     query: { category: "news" },
                                 },
-                            },
+                             },
                         ],
                     },
                 ],
