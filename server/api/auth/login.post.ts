@@ -16,7 +16,6 @@ export default defineEventHandler(async (event) => {
                 body: body,
             },
         );
-        console.log("OK1");
         // 2. setup session
         await setUserSession(event, {
             user: {

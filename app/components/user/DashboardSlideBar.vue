@@ -91,6 +91,12 @@ export default {
                         defaultOpen: true,
                         children: [
                             {
+                                label: "New post",
+                                to: {
+                                    path: "/user/posts/create",
+                                },
+                            },
+                            {
                                 label: "Forum",
                                 to: {
                                     path: "/user/posts",
@@ -103,7 +109,7 @@ export default {
                                     path: "/user/posts",
                                     query: { category: "news" },
                                 },
-                             },
+                            },
                         ],
                     },
                 ],

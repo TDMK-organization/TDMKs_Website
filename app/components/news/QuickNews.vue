@@ -18,21 +18,21 @@ const props = defineProps({
         type: Array,
         default: () => [
             {
-                to: "/posts/1",
+                to: { path: "/post", query: { id: 1 } },
+                title: "Nuxt Icon v1 sss",
+                description: "Khám phá Nuxt Icon phiên bản mới nhất.",
+                image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
+                date: "2024-11-25",
+            },
+            {
+                to: { path: "/post", query: { id: 1 } },
                 title: "Nuxt Icon v1",
                 description: "Khám phá Nuxt Icon phiên bản mới nhất.",
                 image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
                 date: "2024-11-25",
             },
             {
-                to: "/posts/1",
-                title: "Nuxt Icon v1",
-                description: "Khám phá Nuxt Icon phiên bản mới nhất.",
-                image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
-                date: "2024-11-25",
-            },
-            {
-                to: "/posts/1",
+                to: { path: "/post", query: { id: 1 } },
                 title: "Nuxt Icon v1",
                 description: "Khám phá Nuxt Icon phiên bản mới nhất.",
                 image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
@@ -70,7 +70,6 @@ const props = defineProps({
                 reverse
             >
                 <template #title>
-                    
                     <div class="title">
                         {{ item.title }}
                     </div></template

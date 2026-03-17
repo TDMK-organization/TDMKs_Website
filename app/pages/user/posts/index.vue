@@ -1,6 +1,4 @@
 <script setup>
-import PageLayout from "~/components/layout/PageLayout.vue";
-
 const { user, clear: clearSession } = useUserSession();
 
 definePageMeta({

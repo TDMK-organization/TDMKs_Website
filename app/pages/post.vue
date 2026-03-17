@@ -8,10 +8,16 @@
             :links="links"
         />
         this posst pages DI :{{ id_post }}
-        <UButton to="edit\1">Link</UButton>
+        <UButton :to="{ path: '/user/posts/detail', query: { id: id_post } }"
+            >Link</UButton  
+        >
     </LayoutPageLayout>
 </template>
 <script setup>
+const route = useRoute();
+
+// Lấy ID từ query (?id=1)
+const id_post = computed(() => route.query.id);
 useSeoMeta({
     title: "Kiểm tra chất lượng âm thanh của thiết bị thông minh với SoundCheck – Listen",
     ogTitle:
@@ -24,18 +30,3 @@ useSeoMeta({
     twitterCard: "summary_large_image",
 });
 </script>
-<script>
-export default {
-    computed: {
-        id_post() {
-            // 2. Truy cập route thông qua this.$route
-            // Dùng this.$route.params.id_post
-            return this.$route.params.id_post;
-        },
-    },
-    data() {
-        return {};
-    },
-};
-</script>
-<style lang=""></style>
