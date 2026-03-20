@@ -10,9 +10,7 @@ definePageMeta({
     <UDashboardPanel>
         <template #header>
             <UDashboardNavbar
-                :title="
-                    header[currentCategory].title || 'TDMK chia sẻ kiến thức'
-                "
+                title="Danh sách bài viết"
                 :toggle="{
                     color: 'primary',
                     variant: 'subtle',

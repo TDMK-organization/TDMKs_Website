@@ -45,22 +45,124 @@
         </template>
 
         <template #footer="{ collapsed }">
-            <UButton
-                :avatar="{
-                    src: 'https://github.com/benjamincanac.png',
+            <UDropdownMenu
+                :items="userItems"
+                :content="{ align: 'center', collisionPadding: 12 }"
+                :ui="{
+                    content: 'w-(--reka-dropdown-menu-trigger-width) min-w-48',
                 }"
-                :label="collapsed ? undefined : 'Benjamin'"
-                color="neutral"
-                variant="ghost"
-                class="w-full"
-                :block="collapsed"
-            />
+            >
+                <UButton
+                    v-bind="user"
+                    :label="user?.name"
+                    trailing-icon="i-lucide-chevrons-up-down"
+                    color="neutral"
+                    variant="ghost"
+                    square
+                    class="w-full data-[state=open]:bg-elevated overflow-hidden"
+                    :ui="{
+                        trailingIcon: 'text-dimmed ms-auto',
+                    }"
+                />
+            </UDropdownMenu>
         </template>
     </UDashboardSidebar>
 </template>
+<script setup>
+// Sử dụng definePageMeta để xử lý chuyển hướng ngay khi vào trang
+definePageMeta({
+    middleware: ["authenticated"],
+});
 
-<script setup></script>
+const colorMode = useColorMode();
 
+const user = ref({
+    name: "Benjamin Canac",
+    avatar: {
+        src: "https://github.com/benjamincanac.png",
+        alt: "Benjamin Canac",
+    },
+});
+
+const userItems = computed(() => [
+    [
+        {
+            label: "Profile",
+            icon: "i-lucide-user",
+        },
+        {
+            label: "Billing",
+            icon: "i-lucide-credit-card",
+        },
+        {
+            label: "Settings",
+            icon: "i-lucide-settings",
+            to: "/settings",
+        },
+    ],
+    [
+        {
+            label: "Appearance",
+            icon: "i-lucide-sun-moon",
+            children: [
+                {
+                    label: "Light",
+                    icon: "i-lucide-sun",
+                    type: "checkbox",
+                    checked: colorMode.value === "light",
+                    onUpdateChecked(checked) {
+                        if (checked) {
+                            colorMode.preference = "light";
+                        }
+                    },
+                    onSelect(e) {
+                        e.preventDefault();
+                    },
+                },
+                {
+                    label: "Dark",
+                    icon: "i-lucide-moon",
+                    type: "checkbox",
+                    checked: colorMode.value === "dark",
+                    onUpdateChecked(checked) {
+                        if (checked) {
+                            colorMode.preference = "dark";
+                        }
+                    },
+                    onSelect(e) {
+                        e.preventDefault();
+                    },
+                },
+            ],
+        },
+    ],
+    [
+        {
+            label: "GitHub",
+            icon: "i-simple-icons-github",
+            to: "https://github.com/nuxt/ui",
+            target: "_blank",
+        },
+        {
+            label: "Log out",
+            icon: "i-lucide-log-out",
+            onSelect(){
+                handleLogout()
+            }
+
+        },
+    ],
+]);
+
+const { clear, loggedIn } = useUserSession();
+const router = useRouter();
+
+const handleLogout = async () => {
+  await $fetch('/api/auth/logout', { method: 'POST' });
+  clear();
+  await router.push('/auth');
+};
+</script>
 <script>
 export default {
     name: "DashboardSlideBar",
@@ -97,19 +199,12 @@ export default {
                                 },
                             },
                             {
-                                label: "Forum",
+                                label: "List Posts",
                                 to: {
                                     path: "/user/posts",
-                                    query: { category: "forum" },
                                 },
                             },
-                            {
-                                label: "News",
-                                to: {
-                                    path: "/user/posts",
-                                    query: { category: "news" },
-                                },
-                            },
+                            
                         ],
                     },
                 ],

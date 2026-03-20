@@ -2,6 +2,7 @@
 
 definePageMeta({
     layout: "user",
+    middleware: ["authenticated"],
 });
 </script>
 <template>
