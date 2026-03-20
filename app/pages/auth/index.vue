@@ -49,7 +49,6 @@ async function onSubmit(payload) {
             method: "POST",
             body: payload.data,
         });
-
         // QUAN TRỌNG: Cập nhật lại session ở phía client sau khi server gán thành công
         await refreshSession();
         await navigateTo("/user");

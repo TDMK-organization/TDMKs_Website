@@ -1,101 +1,159 @@
 <script setup>
+// 1. Quản lý Session & Auth
 const { user, clear: clearSession } = useUserSession();
+const router = useRouter();
 
 definePageMeta({
     layout: "user",
     middleware: ["authenticated"],
 });
+
+// 2. Trạng thái Filter & Sort
+const q = ref(''); // Từ khóa tìm kiếm tiêu đề
+const sort = ref({ column: 'createdDate', direction: 'desc' }); // Mặc định tin mới nhất lên đầu
+
+// 3. Fetch dữ liệu từ API
+const { data: responses, pending, error: err } = await useFetch("/api/post/posts", {
+    method: "GET",
+});
+
+// 4. Logic xử lý dữ liệu (Filter + Sort)
+const filteredRows = computed(() => {
+    let data = responses.value?.data || [];
+
+    // Filter: Lọc theo tiêu đề (Title)
+    if (q.value) {
+        data = data.filter((post) => {
+            return post.title?.toLowerCase().includes(q.value.toLowerCase());
+        });
+    }
+
+    // Sort: Sắp xếp động
+    const { column, direction } = sort.value;
+    return [...data].sort((a, b) => {
+        const aValue = a[column];
+        const bValue = b[column];
+        const modifier = direction === 'asc' ? 1 : -1;
+
+        if (aValue < bValue) return -1 * modifier;
+        if (aValue > bValue) return 1 * modifier;
+        return 0;
+    });
+});
+
+// 5. Định nghĩa các cột (Columns)
+const columns = [
+    {
+        accessorKey: "_id",
+        header: "ID",
+        class: "w-20",
+        cell: ({ row }) => h("span", { class: "font-mono text-xs text-neutral-500" }, `#${row.getValue("_id").slice(-6)}`),
+    },
+    {
+        accessorKey: "title",
+        header: "Tiêu đề",
+        sortable: true,
+        cell: ({ row }) => h("span", { class: "font-medium line-clamp-1" }, row.getValue("title")),
+    },
+    {
+        accessorKey: "category",
+        header: "Danh mục",
+        cell: ({ row }) => {
+            const category = row.original.category;
+            return h(resolveComponent("UBadge"), { color: "neutral", variant: "outline", size: "sm" }, () => category?.name || "Trống");
+        },
+    },
+    {
+        accessorKey: "status",
+        header: "Trạng thái",
+        sortable: true,
+        cell: ({ row }) => {
+            const isEnable = row.getValue("status") === "enable";
+            return h(resolveComponent("UBadge"), { color: isEnable ? "green" : "red", variant: "soft", size: "sm" }, () => (isEnable ? "Hoạt động" : "Khóa"));
+        },
+    },
+    {
+        accessorKey: "createdDate",
+        header: "Thời gian",
+        sortable: true,
+        cell: ({ row }) => h("span", { class: "text-neutral-500 text-sm" }, new Date(row.getValue("createdDate")).toLocaleString("vi-VN")),
+    },
+    {
+        id: "actions",
+        cell: ({ row }) => h(resolveComponent("UDropdownMenu"), { content: { align: "end" }, items: getRowItems(row) }, 
+            () => h(resolveComponent("UButton"), { icon: "i-lucide-ellipsis-vertical", color: "neutral", variant: "ghost" })
+        ),
+    },
+];
+
+// 6. Hàm Logout
+const handleLogout = async () => {
+    try {
+        await $fetch('/api/auth/logout', { method: 'POST' });
+        clearSession();
+        await router.push('/login');
+    } catch (e) {
+        console.error("Logout failed", e);
+    }
+};
+
+// 7. Hành động trên từng dòng
+function getRowItems(row) {
+    return [
+        [{ label: "Chỉnh sửa", icon: "i-lucide-pencil", onSelect: () => console.log("Edit:", row.original._id) },
+         { label: "Nhật ký", icon: "i-lucide-history", onSelect: () => console.log("Logs:", row.original._id) }],
+        [{ label: "Xóa", icon: "i-lucide-trash", color: "red", onSelect: () => confirm("Xóa bài này?") && console.log("Delete:", row.original._id) }]
+    ];
+}
 </script>
+
 <template>
-    <UDashboardPanel>
+    <UDashboardPanel grow>
         <template #header>
-            <UDashboardNavbar
-                title="Danh sách bài viết"
-                :toggle="{
-                    color: 'primary',
-                    variant: 'subtle',
-                    class: 'rounded-full',
-                }"
-            >
+            <UDashboardNavbar title="Quản lý bài viết (S-RMS)">
                 <template #leading>
-                    <UDashboardSidebarCollapse variant="subtle" />
+                    <UDashboardSidebarCollapse />
                 </template>
+              
             </UDashboardNavbar>
         </template>
+
         <template #body>
-            <UTable :data="data" class="flex-1" />
+            <div class="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+                <UInput 
+                    v-model="q" 
+                    icon="i-lucide-search" 
+                    placeholder="Tìm kiếm tiêu đề bài viết..." 
+                    class="w-72" 
+                    size="md"
+                />
+                <div class="flex gap-2">
+                    <UButton icon="i-lucide-refresh-cw" color="neutral" variant="outline" @click="refreshNuxtData()" />
+                    <UButton label="Tạo bài mới" icon="i-lucide-plus" color="primary" />
+                </div>
+            </div>
+
+            <UTable 
+                v-model:sort="sort"
+                :data="filteredRows" 
+                :columns="columns" 
+                :loading="pending"
+                sort-mode="manual"
+                class="flex-1"
+            >
+                <template #empty-state>
+                    <div class="flex flex-col items-center justify-center py-10 gap-3">
+                        <span class="text-sm text-gray-500">Không tìm thấy bài viết nào.</span>
+                    </div>
+                </template>
+            </UTable>
         </template>
     </UDashboardPanel>
 </template>
 
-<script>
-export default {
-    props: {
-        category: {
-            type: String,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            currentCategory: computed(() => this.$route.query.category),
-            header: {
-                forum: {
-                    title: "TDMK chia sẻ kiến thức",
-                    headline: "List Post Forum",
-                },
-                news: { title: "Tin tức", headline: "List Post News" },
-            },
-
-            data: ref([
-                {
-                    id: "4600",
-                    date: "2024-03-11T15:30:00",
-                    status: "paid",
-                    email: "james.anderson@example.com",
-                    amount: 594,
-                },
-                {
-                    id: "4599",
-                    date: "2024-03-11T10:10:00",
-                    status: "failed",
-                    email: "mia.white@example.com",
-                    amount: 276,
-                },
-                {
-                    id: "4598",
-                    date: "2024-03-11T08:50:00",
-                    status: "refunded",
-                    email: "william.brown@example.com",
-                    amount: 315,
-                },
-                {
-                    id: "4597",
-                    date: "2024-03-10T19:45:00",
-                    status: "paid",
-                    email: "emma.davis@example.com",
-                    amount: 529,
-                },
-                {
-                    id: "4596",
-                    date: "2024-03-10T15:55:00",
-                    status: "paid",
-                    email: "ethan.harris@example.com",
-                    amount: 639,
-                },
-            ]),
-        };
-    },
-};
-</script>
-<style>
-.bg_post {
-    padding: 20px;
+<style scoped>
+/* Tuỳ chỉnh chiều cao bảng để scroll mượt trong Dashboard */
+:deep(table) {
     width: 100%;
-    background-color: #f5f5f5;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    height: 100%;
 }
 </style>
