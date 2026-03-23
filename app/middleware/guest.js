@@ -3,7 +3,6 @@ export default defineNuxtRouteMiddleware(async (event) => {
     const { session, clear } = useUserSession();
 
     if (session.user) {
-        // console.log("Phát hiện session cũ, đang tiến hành xóa...");
-        await clear();
+         return navigateTo("/user");
     }
 });

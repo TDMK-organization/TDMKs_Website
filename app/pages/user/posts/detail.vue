@@ -215,9 +215,8 @@ const handleUpdatePost = async () => {
                         <span>{{ dataForm.description }}</span>
                     </div>
                     <ClientOnly>
-                        <TiptapEditor
+                        <PostEditor
                             v-if="!pendingPost"
-                            ref="editorRef"
                             v-model="dataForm.content"
                         />
                         <template #fallback>

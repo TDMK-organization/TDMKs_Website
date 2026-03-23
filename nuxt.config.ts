@@ -2,13 +2,26 @@ import tailwindcss from "@tailwindcss/vite";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 export default defineNuxtConfig({
-    runtimeConfig: {
-        // Các biến ở đây chỉ khả dụng ở phía Server (Secret keys)
-        apiSecret: "",
+    app: {
+        head: {
+            title: "TDMK Service - Beside your mine",
+            link: [
+                // Đường dẫn đến favicon
+                { rel: "icon", type: "image/x-icon", href: "/TDMKLogoB.svg" },
 
-        public: {
-            // Các biến ở đây sẽ khả dụng ở cả Client và Server
-            apiBase: "http://localhost:5000",
+                // Nếu bạn dùng file .png (khuyên dùng để hiển thị đẹp hơn trên mobile)
+                { rel: "icon", type: "image/png", href: "/TDMKLogoW.png" },
+
+                // Apple Touch Icon (cho iPhone/iPad)
+                { rel: "apple-touch-icon", href: "/TDMKLogoW.png" },
+            ],
+            meta: [
+                {
+                    name: "viewport",
+                    content: "width=device-width, initial-scale=1",
+                },
+                { charset: "utf-8" },
+            ],
         },
     },
 
@@ -17,10 +30,17 @@ export default defineNuxtConfig({
     css: ["~/assets/css/main.css"],
     modules: ["@nuxtjs/i18n", "@nuxt/image", "@nuxt/ui", "nuxt-auth-utils"],
 
-  
-
     vite: {
         plugins: [tailwindcss()],
+        optimizeDeps: {
+            include: [
+                "@nuxt/ui > prosemirror-state",
+                "@nuxt/ui > prosemirror-transform",
+                "@nuxt/ui > prosemirror-model",
+                "@nuxt/ui > prosemirror-view",
+                "@nuxt/ui > prosemirror-gapcursor",
+            ],
+        },
     },
 
     i18n: {

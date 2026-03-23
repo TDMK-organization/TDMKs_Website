@@ -146,17 +146,12 @@ function getRowItems(row) {
                 onSelect: () => {
                     // Chuyển hướng đến trang chi tiết với query id_post
                     navigateTo(
-                        `https://service.tdmk.vn/user/posts/detail?id_post=${row.original._id}`,
+                        `/user/posts/detail?id_post=${row.original._id}`,
                         {
                             external: true, // Mở link ngoài nếu service.tdmk.vn khác domain hiện tại
                         },
                     );
                 },
-            },
-            {
-                label: "Nhật ký",
-                icon: "i-lucide-history",
-                onSelect: () => console.log("Logs:", row.original._id),
             },
         ],
         [
@@ -164,13 +159,22 @@ function getRowItems(row) {
                 label: "Xóa",
                 icon: "i-lucide-trash",
                 color: "red",
-                onSelect: () =>
-                    confirm("Xóa bài này?") &&
-                    console.log("Delete:", row.original._id),
+                onSelect: () => deletePost(row.original._id),
             },
         ],
     ];
 }
+
+const deletePost = async (id) => {
+    if (confirm("Bạn có chắc muốn xóa bài viết này?")) {
+        try {
+            await $fetch(`/api/post/${id}`, { method: "DELETE" });
+            refreshNuxtData();
+        } catch (e) {
+            console.error("Xóa bài viết thất bại", e);
+        }
+    }
+};
 </script>
 
 <template>
