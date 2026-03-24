@@ -214,6 +214,7 @@ const handleUpdatePost = async () => {
                     <div class="text-lg text-pretty text-muted mt-4">
                         <span>{{ dataForm.description }}</span>
                     </div>
+
                     <ClientOnly>
                         <PostEditor
                             v-if="!pendingPost"

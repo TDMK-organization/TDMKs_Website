@@ -1,12 +1,12 @@
 <script setup>
 const links = ref([
     {
-        label: "Get started",
+        label: "Bắt đầu demo",
         to: "/docs/getting-started",
         icon: "i-lucide-square-play",
     },
     {
-        label: "Learn more",
+        label: "Tìm hiểu thêm",
         to: "/docs/getting-started/theme/design-system",
         color: "neutral",
         variant: "subtle",
@@ -17,16 +17,16 @@ const links = ref([
 
 <template>
     <UPageHero
-        title="Computer Vision"
-        description="Giải pháp AI cho"
+        title="Thị giác máy tính"
+        description="Giải pháp tích hợp AI Vision tiên tiến, cung cấp khả năng nhận diện và phân tích hình ảnh chính xác, giúp doanh nghiệp tối ưu hóa quy trình sản xuất và nâng cao hiệu suất vận hành."
         headline="AI VISION"
         orientation="horizontal"
         :links="links"
     >
-        <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq_FvuBt79lcHdNz-karIP-Njs88TnO7UXkw&s"
-            alt="App screenshot"
-            class="rounded-lg shadow-2xl ring ring-default"
-        />
+        <template #default>
+            <div class="hidden lg:flex items-center justify-center">
+                <EyeFollow />
+            </div>
+        </template>
     </UPageHero>
 </template>

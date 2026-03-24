@@ -1,24 +1,27 @@
 <script setup>
 const links = ref([
-  {
-    label: 'Get started',
-    to: '/docs/getting-started',
-    icon: 'i-lucide-square-play'
-  },
-  {
-    label: 'Learn more',
-    to: '/docs/getting-started/theme/design-system',
-    color: 'neutral',
-    variant: 'subtle',
-    trailingIcon: 'i-lucide-arrow-right'
-  }
-])
+    {
+        label: "Bắt đầu lên ý tưởng cho vấn đề của bạn",
+        to: "/about",
+        icon: "i-lucide-square-play",
+    },
+    {
+        label: "Tìm hiểu chúng tôi",
+        to: "/about",
+        color: "neutral",
+        variant: "subtle",
+        trailingIcon: "i-lucide-arrow-right",
+    },
+]);
 </script>
 
 <template>
-  <UPageHero
-    title="TDMK SERVICES"
-    description="A Nuxt/Vue-integrated UI library providing a rich set of fully-styled, accessible and highly customizable components for building modern web applications."
-    :links="links"
-  />
+    <UPageHero title="TDMK SERVICES" :links="links">
+        <template #description>
+            Cung cấp giải pháp chuyển đổi số toàn diện cho nhà máy thông minh
+            thông qua hệ thống AI Vision, IoT và tự động hóa hiện đại.<br />
+            Chúng tôi đồng hành cùng doanh nghiệp tối ưu hóa quy trình vận hành
+            và nâng cao năng suất sản xuất bằng công nghệ đột phá.
+        </template>
+    </UPageHero>
 </template>

@@ -17,8 +17,8 @@ const props = defineProps({
     posts: {
         type: Array,
         default: () => [
-            {
-                to: { path: "/post", query: { id: 1 } },
+            { 
+                to: `/post/${1}`,
                 title: "Nuxt Icon v1 sss",
                 description: "Khám phá Nuxt Icon phiên bản mới nhất.",
                 image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
