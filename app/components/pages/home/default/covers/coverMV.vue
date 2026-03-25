@@ -59,7 +59,7 @@ const links = ref([
                 :links="links"
             >
                 <template #title>
-                    <span class="glow-text">Thị giác máy tính</span>
+                    <span class="glow-text text-white">Thị giác máy tính</span>
                 </template>
                 <template #default>
                     <div class=" items-center justify-center hidden md:flex">

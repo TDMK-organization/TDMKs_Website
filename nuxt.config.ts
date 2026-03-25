@@ -2,6 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 export default defineNuxtConfig({
+    ssr: true,
     app: {
         head: {
             title: "TDMK Service - Beside your mine",
@@ -28,8 +29,31 @@ export default defineNuxtConfig({
     compatibilityDate: "2025-07-15",
     devtools: { enabled: true },
     css: ["~/assets/css/main.css"],
-    modules: ["@nuxtjs/i18n", "@nuxt/image", "@nuxt/ui", "nuxt-auth-utils"],
-
+    modules: [
+        "@nuxtjs/i18n",
+        "@nuxt/image",
+        "@nuxt/ui",
+        "nuxt-auth-utils",
+        "@nuxtjs/seo",
+        "@nuxt/image",
+    ],
+    // cấu hình seo
+    site: {
+        url: "https://service.tdmk.vn", // RẤT QUAN TRỌNG: Thay bằng domain thật của bạn
+        name: "TDMK - Smart Factory Solutions",
+        description:
+            "Nền tảng tiên phong cho lộ trình chuyển đổi số nhà máy 4.0 và AI Vision.",
+        defaultLocale: "vi", // Khai báo ngôn ngữ mặc định là Tiếng Việt
+    },
+    seo: {
+        redirectToCanonicalSiteUrl: true, // Tự động redirect về domain chính nếu gõ sai (ví dụ từ www về non-www)
+    },
+    // cấu hình webP
+    image: {
+        format: ["webp"], // Tự động ép tất cả ảnh xuất ra định dạng WebP cho nhẹ
+        quality: 80, // Giữ chất lượng ảnh ở mức 80% để tối ưu dung lượng
+        // domains: ['api.tdmk.vn'], // Mở comment dòng này nếu bạn lấy ảnh từ một server/API khác
+    },
     vite: {
         plugins: [tailwindcss()],
         optimizeDeps: {

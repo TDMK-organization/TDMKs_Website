@@ -8,7 +8,9 @@
         <PagesContactusContactForm class="mt-30" />
         <div class="text-2xl font-bold mb-2 text-center mt-30">Hoặc</div>
         <Header text="Hãy liên hệ cho chúng tôi" />
-        <div class="bg-card mt-30 flex flex-wrap gap-4 justify-center p-4 rounded-lg">
+        <div
+            class="bg-card mt-30 flex flex-wrap gap-4 justify-center p-4 rounded-lg"
+        >
             <UPageCard
                 v-for="value in items"
                 :title="value.title"
@@ -21,6 +23,18 @@
         </div>
     </LayoutPageLayout>
 </template>
+<script setup>
+useSeoMeta({
+    title: "TDMK - Giải pháp Chuyển đổi số & Nhà máy thông minh 4.0",
+    description:
+        "TDMK cung cấp hệ thống AI Vision, quản trị Big Data và IoT tự động hóa, giúp tối ưu hiệu suất và nâng tầm quy trình sản xuất cho doanh nghiệp của bạn.",
+    ogTitle: "TDMK - Giải pháp Chuyển đổi số & Nhà máy thông minh 4.0",
+    ogDescription:
+        "TDMK cung cấp hệ thống AI Vision, quản trị Big Data và IoT tự động hóa...",
+    ogImage: "https://tdmk.vn/images/og-homepage.jpg", // Ảnh bìa khi share link
+    twitterCard: "summary_large_image",
+});
+</script>
 <script>
 export default {
     data() {
@@ -34,6 +48,4 @@ export default {
     },
 };
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

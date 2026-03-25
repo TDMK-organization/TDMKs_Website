@@ -14,12 +14,15 @@
     "@nuxt/image": "^1.11.0",
     "@nuxt/ui": "^4.3.0",
     "@nuxtjs/i18n": "^10.2.1",
+    "@nuxtjs/seo": "^4.0.2",
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.1.16",
     "@tiptap/pm": "^3.14.0",
     "@tiptap/starter-kit": "^3.14.0",
     "@tiptap/vue-3": "^3.14.0",
     "nuxt": "^4.2.0",
     "nuxt-auth-utils": "^0.5.29",
+    "satori": "^0.26.0",
     "tailwindcss": "^4.1.16",
     "typescript": "^5.9.3",
     "vue": "^3.5.22",
@@ -31,6 +34,7 @@
     "@iconify-json/lucide": "^1.2.87",
     "@iconify-json/material-symbols": "^1.2.53",
     "@iconify-json/streamline-sharp": "^1.2.0",
-    "@tailwindcss/typography": "^0.5.19"
+    "@tailwindcss/typography": "^0.5.19",
+    "nuxt-og-image": "^6.2.0"
   }
 }
