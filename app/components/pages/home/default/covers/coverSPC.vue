@@ -36,7 +36,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="relative w-full bg-[#0b1120] overflow-hidden">
+    <div class="relative w-full overflow-hidden">
         <div
             class="absolute top-0 -left-[10%] w-[500px] h-[500px] bg-emerald-500/10 blur-[130px] rounded-full pointer-events-none z-0"
         ></div>
@@ -55,7 +55,9 @@ onUnmounted(() => {
                 <div
                     class="flex flex-col items-start text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight mt-2"
                 >
-                    <span class="text-white pb-1"> Hệ thống Quản Trị </span>
+                    <span class="--ui-text-highlighted pb-1">
+                        Hệ thống Quản Trị
+                    </span>
 
                     <div class="relative w-full h-[1.2em] overflow-visible">
                         <Transition name="fade-slide">

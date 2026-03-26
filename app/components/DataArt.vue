@@ -1,10 +1,12 @@
 <script setup>
-import { ref, onMounted, onUnmounted, markRaw } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const charts = ref([
-  { id: 1, name: 'Yield Rate', data: [70, 65, 75, 80, 70], isCritical: false, isResolving: false, type: 'main' },
-  { id: 2, name: 'AI Vision', data: [50, 40, 60, 55, 70], isCritical: false, isResolving: false, type: 'sub' },
-  { id: 3, name: 'IoT Latency', data: [30, 45, 35, 50, 40], isCritical: false, isResolving: false, type: 'sub' }
+  // Main: 20 điểm dữ liệu cho biểu đồ đường
+  { id: 1, name: 'Yield Rate (Năng suất)', data: Array(20).fill(60), isCritical: false, isResolving: false, type: 'main' },
+  // Sub: 15 điểm dữ liệu cho biểu đồ cột
+  { id: 2, name: 'AI Vision Load', data: Array(15).fill(50), isCritical: false, isResolving: false, type: 'sub' },
+  { id: 3, name: 'IoT Latency', data: Array(15).fill(40), isCritical: false, isResolving: false, type: 'sub' }
 ])
 
 const limit = 85
@@ -14,10 +16,14 @@ const updateData = () => {
   charts.value.forEach(chart => {
     if (chart.isResolving) return
     const lastPoint = chart.data[chart.data.length - 1]
-    const change = Math.random() * 25 - (lastPoint > 75 ? 12 : 10)
-    const nextPoint = Math.max(5, Math.min(98, lastPoint + change))
+    
+    // Tạo độ nhiễu ngẫu nhiên
+    const change = Math.random() * 25 - (lastPoint > 75 ? 15 : 10)
+    const nextPoint = Math.max(10, Math.min(98, lastPoint + change))
+    
     chart.data.push(nextPoint)
-    if (chart.data.length > 20) chart.data.shift()
+    chart.data.shift()
+    
     if (nextPoint > limit) chart.isCritical = true
   })
 }
@@ -25,70 +31,98 @@ const updateData = () => {
 const handleSolve = (id) => {
   const chart = charts.value.find(c => c.id === id)
   chart.isResolving = true
+  
   setTimeout(() => {
-    chart.data = chart.data.map(p => p > 60 ? 45 : p)
+    // Reset dữ liệu về mức an toàn
+    chart.data = chart.data.map(() => Math.random() * 20 + 30)
     chart.isCritical = false
     chart.isResolving = false
-  }, 800)
+  }, 1000)
 }
 
 onMounted(() => { timer = setInterval(updateData, 800) })
 onUnmounted(() => { clearInterval(timer) })
 
-const getPathMain = (data) => data.map((p, i) => `${i * 15 + 10},${100 - p * 0.8}`).join(' ')
-const getPathSub = (data) => data.map((p, i) => `${p * 0.7 + 15},${i * 12 + 10}`).join(' ')
+// Hàm vẽ đường SVG (Cho Chart Main)
+// ViewBox width = 300, height = 100. Có 20 điểm dữ liệu -> khoảng cách X là ~15.7
+const getPathMain = (data) => {
+  return data.map((val, i) => `${i * 15.7},${100 - val * 0.9}`).join(' ')
+}
 </script>
 
 <template>
-  <div class="w-[500px] h-[500px] p-5 bg-slate-950 rounded-[2.5rem] border-4 border-slate-900 shadow-2xl flex flex-col gap-4 overflow-hidden">
+  <div class="w-[500px] h-100 p-5 bg-slate-950 rounded-[2.5rem] border-4 border-slate-900 shadow-2xl flex flex-col gap-4 overflow-hidden relative font-sans">
     
-    <div class="text-center py-1">
-      <h2 class="text-gray-400 text-[11px] font-black uppercase tracking-[0.5em]">Hệ thống quản trị TDMK</h2>
+    <div class="text-center py-1 z-10">
+      <h2 class="text-slate-500 text-[11px] font-black uppercase tracking-[0.4em]">TDMK Monitor System</h2>
     </div>
 
-    <div class="grid grid-rows-2 gap-3 flex-1">
+    <div class="grid grid-rows-2 gap-3 flex-1 z-10">
       
       <div v-for="chart in charts.filter(c => c.type === 'main')" :key="chart.id"
-           class="relative rounded-3xl border-2 transition-all duration-500 overflow-hidden flex flex-col p-4 bg-slate-950"
-           :class="chart.isCritical ? 'border-red-600 shadow-[inset_0_0_20px_rgba(220,38,38,0.2)]' : 'border-slate-800'">
+           class="relative rounded-3xl border-2 transition-all duration-500 overflow-hidden flex flex-col p-5 bg-slate-900/50"
+           :class="chart.isCritical ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.2)]' : 'border-slate-800'">
         
-        <div class="flex justify-between items-start text-[10px] font-mono opacity-40 uppercase font-bold">
-           <span>{{ chart.name }}</span>
-           <span :class="chart.isCritical ? 'text-red-500 opacity-100' : ''">{{ chart.data[chart.data.length-1].toFixed(0) }}</span>
+        <div class="flex justify-between items-start text-xs font-mono uppercase font-bold mb-2">
+           <span class="text-slate-400">{{ chart.name }}</span>
+           <span :class="chart.isCritical ? 'text-red-500 animate-pulse' : 'text-emerald-400'">
+             {{ chart.data[chart.data.length-1].toFixed(0) }}%
+           </span>
         </div>
 
-        <svg viewBox="0 0 300 120" class="flex-1 w-full">
-          <polyline fill="none" :stroke="chart.isCritical ? '#ff0000' : '#1e293b'" stroke-width="3" stroke-linecap="round" :points="getPathMain(chart.data)" />
-        </svg>
+        <div class="flex-1 w-full relative">
+          <svg viewBox="0 0 300 100" class="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+            <polyline 
+              fill="none" 
+              :stroke="chart.isCritical ? '#ef4444' : '#10b981'" 
+              stroke-width="3" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"
+              :points="getPathMain(chart.data)" 
+              class="chart-line"
+            />
+          </svg>
+        </div>
 
         <button v-if="chart.isCritical && !chart.isResolving" 
                 @click="handleSolve(chart.id)"
-                class="absolute inset-0 m-auto w-24 h-10 bg-red-600 text-white font-black rounded-xl text-[11px] shadow-lg active:scale-90 transition-transform">
-          REPAIR
+                class="absolute inset-0 m-auto w-36 h-12 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl text-xs shadow-[0_0_20px_rgba(239,68,68,0.5)] active:scale-95 transition-all z-20 flex items-center justify-center gap-2">
+          ⚡ REPAIR
         </button>
-        <div v-if="chart.isResolving" class="absolute inset-0 bg-red-600/10 backdrop-blur-sm flex items-center justify-center animate-pulse text-white font-black text-[10px]">FIXING...</div>
+        <div v-if="chart.isResolving" class="absolute inset-0 bg-yellow-500/10 backdrop-blur-sm flex items-center justify-center text-yellow-500 font-black tracking-widest text-sm z-20">
+          FIXING...
+        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
         <div v-for="chart in charts.filter(c => c.type === 'sub')" :key="chart.id"
-             class="relative rounded-3xl border-2 transition-all duration-500 overflow-hidden p-4 bg-slate-950 flex flex-col"
-             :class="chart.isCritical ? 'border-red-600 shadow-[inset_0_0_15px_rgba(220,38,38,0.2)]' : 'border-slate-800'">
+             class="relative rounded-3xl border-2 transition-all duration-500 overflow-hidden p-4 bg-slate-900/50 flex flex-col"
+             :class="chart.isCritical ? 'border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.2)]' : 'border-slate-800'">
           
-          <div class="flex justify-between items-start text-[9px] font-mono opacity-40 uppercase font-bold h-full">
-            <span class="rotate-90 origin-left translate-y-4">{{ chart.name }}</span>
-            <span>{{ chart.data[chart.data.length-1].toFixed(0) }}%</span>
+          <div class="flex justify-between items-center text-[10px] font-mono uppercase font-bold mb-3">
+            <span class="text-slate-400 truncate">{{ chart.name }}</span>
+            <span :class="chart.isCritical ? 'text-red-500' : 'text-cyan-400'">{{ chart.data[chart.data.length-1].toFixed(0) }}</span>
           </div>
 
-          <svg viewBox="0 0 100 200" class="absolute inset-0 w-full h-full p-6">
-            <polyline fill="none" :stroke="chart.isCritical ? '#ff0000' : '#1e293b'" stroke-width="3" stroke-linecap="round" :points="getPathSub(chart.data)" />
-          </svg>
+          <div class="flex-1 flex items-end justify-between gap-[2px] w-full h-full relative z-10">
+            <div v-for="(val, idx) in chart.data" :key="idx"
+                 class="w-full rounded-t-[1px] transition-all duration-300"
+                 :class="[
+                   chart.isCritical ? 'bg-red-500/80 shadow-[0_0_5px_red]' : 'bg-cyan-500/80',
+                   chart.isResolving ? 'bg-yellow-500' : ''
+                 ]"
+                 :style="{ height: val + '%' }">
+            </div>
+          </div>
 
           <button v-if="chart.isCritical && !chart.isResolving" 
                   @click="handleSolve(chart.id)"
-                  class="absolute inset-0 m-auto w-14 h-14 bg-red-600 text-white font-black rounded-2xl text-[10px] flex items-center justify-center rotate-90 shadow-lg active:scale-90">
+                  class="absolute inset-0 m-auto w-20 h-10 bg-red-600 hover:bg-red-500 text-white font-black rounded-lg text-[10px] shadow-[0_0_15px_rgba(239,68,68,0.5)] active:scale-95 transition-all z-20">
             FIX
           </button>
-          <div v-if="chart.isResolving" class="absolute inset-0 bg-red-600/10 backdrop-blur-sm flex items-center justify-center animate-pulse"></div>
+          <div v-if="chart.isResolving" class="absolute inset-0 bg-yellow-500/10 backdrop-blur-sm flex items-center justify-center text-yellow-500 font-black text-[10px] z-20">
+            FIXING...
+          </div>
         </div>
       </div>
 
@@ -97,8 +131,14 @@ const getPathSub = (data) => data.map((p, i) => `${p * 0.7 + 15},${i * 12 + 10}`
 </template>
 
 <style scoped>
-polyline {
-  filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3));
-  transition: all 0.7s ease-in-out;
+/* Tạo hiệu ứng phát sáng (Glow) cho đường Line Chart */
+.chart-line {
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Đổi màu phát sáng thành Đỏ khi bị quá tải */
+.border-red-500 .chart-line {
+  filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8));
 }
 </style>

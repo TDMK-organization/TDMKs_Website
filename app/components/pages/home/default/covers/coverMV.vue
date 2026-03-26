@@ -17,7 +17,7 @@ const links = ref([
 
 <template>
     <div
-        class="relative w-full min-h-screen bg-[#080d1a] overflow-hidden font-sans"
+        class="relative w-full min-h-screen  overflow-hidden font-sans"
     >
         <div
             class="absolute -top-[20%] -left-[10%] w-[50%] h-[60%] bg-emerald-600/20 blur-[130px] rounded-full pointer-events-none"
@@ -31,8 +31,8 @@ const links = ref([
             class="absolute inset-0 pointer-events-none opacity-[0.05]"
             style="
                 background-image:
-                    linear-gradient(to right, #ffffff 1px, transparent 1px),
-                    linear-gradient(to bottom, #ffffff 1px, transparent 1px);
+                    linear-gradient(to right, var(--ui-text-highlighted) 1px, transparent 1px),
+                    linear-gradient(to bottom, var(--ui-text-highlighted) 1px, transparent 1px);
                 background-size: 50px 50px;
                 mask-image: radial-gradient(
                     ellipse at center,
@@ -47,9 +47,7 @@ const links = ref([
             "
         ></div>
 
-        <div
-            class="absolute inset-0 bg-gradient-to-b from-transparent to-[#080d1a]/80 pointer-events-none z-0"
-        ></div>
+        <div class="absolute inset-0 pointer-events-none z-0"></div>
 
         <div class="relative z-10 w-full h-full">
             <UPageHero
@@ -59,10 +57,10 @@ const links = ref([
                 :links="links"
             >
                 <template #title>
-                    <span class="glow-text text-white">Thị giác máy tính</span>
+                    <span class="glow-text ">Thị giác máy tính</span>
                 </template>
                 <template #default>
-                    <div class=" items-center justify-center hidden md:flex">
+                    <div class="items-center justify-center hidden md:flex">
                         <EyeFollow />
                     </div>
                 </template>

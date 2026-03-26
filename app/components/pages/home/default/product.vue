@@ -39,7 +39,7 @@
                         :title="item.title"
                         :description="item.description"
                         image="https://nuxt.com/assets/blog/nuxt-icon/cover.png"
-                        to="https://nuxt.com/blog/nuxt-icon-v1-0"
+                        :to="item.to"
                         target="_blank"
                         variant="naked"
                     />
@@ -73,7 +73,9 @@ export default {
                 },
                 {
                     title: "Thiết bị đo lường và camera công nghiệp",
-                    description: "",
+                    description:
+                        "Phân phối đa dạng thiết bị đo lường điện, kiểm tra cơ khí chính xác, phân tích vật liệu (NDT) và quan trắc môi trường. Sản phẩm chính hãng từ các thương hiệu hàng đầu thế giới, đáp ứng toàn diện nhu cầu kiểm định cho nhà máy và phòng thí nghiệm.",
+                    to: "https://tdmk.vn/san-pham/",
                 },
             ],
         };
