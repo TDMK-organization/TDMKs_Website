@@ -1,2 +1,18 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+
+/* Trạng thái ẩn mặc định */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(5px);
+  transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Trạng thái khi cuộn tới (Sẽ được JS thêm class này vào) */
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}

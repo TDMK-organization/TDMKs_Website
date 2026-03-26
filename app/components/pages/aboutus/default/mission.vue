@@ -1,8 +1,8 @@
 <template>
-    <Header class="m-20 " text="Triết lý phát triển" />
+    <Header class="m-20" text="Triết lý phát triển" />
     <div class="flex">
         <UPageCard
-            class="w-100 m-5 cursor-pointer"
+            :class="`w-full m-5 cursor-pointer`"
             v-for="(item, index) in items"
             :description="item.description"
             icon="i-simple-icons-tailwindcss"
@@ -10,7 +10,7 @@
             spotlight-color="primary"
         >
             <template #title>
-                <div class="bg-blue ">
+                <div class="bg-blue">
                     {{ item.title }}
                 </div>
             </template>

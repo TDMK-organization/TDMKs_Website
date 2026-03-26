@@ -1,7 +1,5 @@
 <template >
-    <div>
-        this careers page
-    </div>
+    <PagesCommingSoon/>
 </template>
 <script>
 export default {
