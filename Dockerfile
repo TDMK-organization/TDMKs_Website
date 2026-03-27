@@ -1,5 +1,5 @@
 # Giai đoạn 1: Build ứng dụng
-FROM node:20-slim AS builder
+FROM node:22-slim AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # Giai đoạn 2: Chạy ứng dụng (Stage gọn nhẹ hơn)
-FROM node:20-slim
+FROM node:22-slim
 
 WORKDIR /app
 

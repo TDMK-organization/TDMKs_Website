@@ -21,7 +21,10 @@ export default defineNuxtConfig({
                     name: "viewport",
                     content: "width=device-width, initial-scale=1",
                 },
-                { name: 'google-site-verification', content: 'uNgUnYHfgf2U23sOYXLp1lL9yyPcs8uLaUrvGLLfh1Y' },
+                {
+                    name: "google-site-verification",
+                    content: "uNgUnYHfgf2U23sOYXLp1lL9yyPcs8uLaUrvGLLfh1Y",
+                },
                 { charset: "utf-8" },
             ],
         },
@@ -36,7 +39,6 @@ export default defineNuxtConfig({
         "@nuxt/ui",
         "nuxt-auth-utils",
         "@nuxtjs/seo",
-        "@nuxt/image",
     ],
     // cấu hình seo
     site: {
@@ -55,6 +57,7 @@ export default defineNuxtConfig({
         quality: 80, // Giữ chất lượng ảnh ở mức 80% để tối ưu dung lượng
         // domains: ['api.tdmk.vn'], // Mở comment dòng này nếu bạn lấy ảnh từ một server/API khác
     },
+    ogImage: { enabled: false },
     vite: {
         plugins: [tailwindcss()],
         optimizeDeps: {
