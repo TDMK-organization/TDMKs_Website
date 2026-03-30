@@ -112,8 +112,6 @@ const onSubmit = async (event) => {
     // Ngăn load lại trang (UForm tự động làm việc này nhưng khai báo cho chắc)
     event.preventDefault()
     
-    // Test xem dữ liệu đã lấy được chưa
-    console.log('Dữ liệu form:', state)
     
     // Ở đây bạn có thể gọi API gửi email, ví dụ: $fetch('/api/send-email', { method: 'POST', body: state })
     

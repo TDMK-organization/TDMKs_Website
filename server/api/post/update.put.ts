@@ -13,7 +13,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event);
-    console.log("Received body for update:", body);
     const postId = getQuery(event);
 
     const response: any = await $fetch(
@@ -27,6 +26,5 @@ export default defineEventHandler(async (event) => {
         },
     );
 
-    console.log(response);
     return response.data;
 });

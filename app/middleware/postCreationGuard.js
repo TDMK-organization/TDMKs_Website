@@ -12,12 +12,12 @@ export default defineNuxtRouteMiddleware(async (event) => {
             description:
                 "Đây là trang web giúp tdmk tiếp cận được nhiều khách hàng hơn",
             category: "69afd19cb09007343f9a6ef5",
+            thumbnail: "http://localhost:3000/_ipx/q_80/TDMKLogoW.svg",
         };
         const data = await $fetch("/api/post/init", {
             method: "POST",
             body: payload,
         });
-        console.log("Phản hồi từ API khởi tạo bài viết:", data.data._id);
         if (data.data._id) {
             return navigateTo(`/user/posts/detail?id_post=${data.data._id}`);
         }

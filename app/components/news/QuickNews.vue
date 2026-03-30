@@ -1,130 +1,78 @@
 <script setup>
-// Khai báo props với giá trị mặc định cho 'main' và 'posts'
+import { watch } from "vue";
+
 const props = defineProps({
     loading: {
         type: Boolean,
         default: false,
     },
-    main: {
-        type: Object,
-        default: () => ({
-            title: "Tiêu đề mặc định",
-            description: "Mô tả mặc định cho bài viết chính.",
-            srcImage: "/tailwindcss-v4.svg",
-            altImage: "Alt text mặc định",
-        }),
-    },
     posts: {
         type: Array,
-        default: () => [
-            { 
-                to: `/post/${1}`,
-                title: "Nuxt Icon v1 sss",
-                description: "Khám phá Nuxt Icon phiên bản mới nhất.",
-                image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
-                date: "2024-11-25",
-            },
-            {
-                to: { path: "/post", query: { id: 1 } },
-                title: "Nuxt Icon v1",
-                description: "Khám phá Nuxt Icon phiên bản mới nhất.",
-                image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
-                date: "2024-11-25",
-            },
-            {
-                to: { path: "/post", query: { id: 1 } },
-                title: "Nuxt Icon v1",
-                description: "Khám phá Nuxt Icon phiên bản mới nhất.",
-                image: "https://nuxt.com/assets/blog/nuxt-icon/cover.png",
-                date: "2024-11-25",
-            },
-        ],
+        default: () => [],
     },
 });
 </script>
+
 <template>
-    <div class="bg_quickNews">
-        <div class="left_QN">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-10">
+        <div class="lg:col-span-3">
             <UPageCard
-                :title="main.title"
-                :description="main.description"
+                :title="posts[0].title"
+                :description="posts[0].description"
+                :to="`/post/${posts[0]._id}`"
                 icon="i-simple-icons-tailwindcss"
                 orientation="vertical"
                 reverse
                 spotlight
                 spotlight-color="primary"
+                class="h-full"
             >
                 <img
-                    :src="main.srcImage"
-                    :alt="main.altImage"
+                    :src="
+                        posts[0].thumbnail
+                            ? posts[0].thumbnail
+                            : 'https://nuxt.com/assets/blog/nuxt-icon/cover.png'
+                    "
+                    alt="AI Vision"
                     class="w-full h-auto mt-10"
                 />
             </UPageCard>
         </div>
-        <div class="right_QN">
+
+        <div class="lg:col-span-2 flex flex-col gap-4 h-full">
             <UPageCard
-                v-for="(item, index) in posts"
+                v-for="(item, index) in posts.slice(1, 4)"
                 :key="index"
-                :to="item.to"
+                :to="`/post/${item._id}`"
                 orientation="horizontal"
                 reverse
+                class="flex-1"
             >
                 <template #title>
-                    <div class="title">
+                    <div class="line-clamp-2 font-bold">
                         {{ item.title }}
-                    </div></template
-                >
+                    </div>
+                </template>
                 <template #description>
-                    <div class="description-truncate">
+                    <div class="line-clamp-2 text-sm mt-1 text-gray-400">
                         {{ item.description }}
                     </div>
                 </template>
 
                 <img
-                    src="/tailwindcss-v4.svg"
-                    alt="Tailwind CSS"
-                    class="w-full"
-            /></UPageCard>
+                    :src="
+                        item.thumbnail
+                            ? item.thumbnail
+                            : 'https://nuxt.com/assets/blog/nuxt-icon/cover.png'
+                    "
+                    alt="AI VISION "
+                    class="w-full h-full object-cover"
+                />
+            </UPageCard>
         </div>
     </div>
 </template>
 
 <style scoped>
-/* 
-.bg_quickNews {
-} 
-*/
-
-.left_QN {
-    width: 60%;
-    float: left;
-}
-.right_QN {
-    width: 40%;
-    padding: 0px 20px;
-    float: right;
-}
-.right_QN > div {
-    margin-bottom: 20px;
-    height: 170px;
-    overflow: hidden;
-}
-.description-truncate {
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Thay đổi số này để giới hạn số dòng (ví dụ: 3 dòng) */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    /* margin-bottom: 20px; - Không cần thiết nếu bạn đã có nó ở nơi khác */
-    /* Bạn có thể bỏ thuộc tính height: 90px; trong template inline style nếu dùng cách này */
-}
-.right_QN .title {
-    /* Đảm bảo chúng ta chỉ nhắm mục tiêu vào tiêu đề của các thẻ bên phải */
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* Giới hạn 2 dòng */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    /* Đảm bảo chiều cao của tiêu đề không cố định để nó có thể co giãn cho 1 hoặc 2 dòng */
-    height: auto !important;
-}
+/* Không cần float, không cần tính % thủ công nữa, xóa sạch cho nhẹ file */
 </style>

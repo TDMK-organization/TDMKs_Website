@@ -33,7 +33,7 @@ export default {
                     description:
                         "Learn how to customize Nuxt UI components using Tailwind CSS v4.",
                     icon: "i-lucide-swatch-book",
-                    to: "/docs/getting-started/theme/design-system",
+                    to: "/",
                     class: "lg:col-span-2",
                     image: {
                         path: "https://ui2.nuxt.com/illustrations/color-palette",
@@ -47,7 +47,7 @@ export default {
                     description:
                         "Nuxt UI integrates with Nuxt Fonts to provide plug-and-play font optimization.",
                     icon: "i-lucide-a-large-small",
-                    to: "/docs/getting-started/integrations/fonts",
+                    to: "/",
                     variant: "soft",
                 },
                 {
@@ -55,7 +55,7 @@ export default {
                     description:
                         "Nuxt UI integrates with Nuxt Color Mode to switch between light and dark.",
                     icon: "i-lucide-sun-moon",
-                    to: "/docs/getting-started/integrations/color-mode",
+                    to: "/",
                     variant: "soft",
                 },
                 {
@@ -63,7 +63,7 @@ export default {
                     description:
                         "Nuxt UI integrates with Nuxt Icon to access over 200,000+ icons from Iconify.",
                     icon: "i-lucide-smile",
-                    to: "/docs/getting-started/integrations/icons",
+                    to: "/",
                     image: {
                         path: "https://ui2.nuxt.com/illustrations/icon-library",
                         width: 362,

@@ -29,7 +29,6 @@ export default defineEventHandler(async (event) => {
 
         return { success: true };
     } catch (error) {
-        console.log(error);
         throw createError({
             statusCode: 401,
             message: "Thôngs tin đăng nhập không chính xác",

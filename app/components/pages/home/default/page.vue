@@ -1,7 +1,7 @@
 <template>
     <PagesHomeDefaultCarousel />
     <PagesHomeDefaultProduct />
-        <PagesAboutusDefaultPartner />
+    <PagesAboutusDefaultPartner />
     <LayoutPageLayout class="bg_layout relative overflow-hidden font-sans">
         <div class="relative z-10 w-full max-w-7xl mx-auto px-4 lg:px-8 mt-10">
             <PagesContactusContactForm />

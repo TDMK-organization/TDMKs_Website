@@ -1,4 +1,6 @@
 <script setup>
+import { ref, computed, watch, h, resolveComponent } from "vue";
+
 // 1. Quản lý Session & Auth
 const { user, clear: clearSession } = useUserSession();
 const router = useRouter();
@@ -8,44 +10,41 @@ definePageMeta({
     middleware: ["authenticated"],
 });
 
-// 2. Trạng thái Filter & Sort
-const q = ref(""); // Từ khóa tìm kiếm tiêu đề
-const sort = ref({ column: "createdDate", direction: "desc" }); // Mặc định tin mới nhất lên đầu
+// 2. Trạng thái Filter & Phân trang
+const q = ref(""); // Từ khóa tìm kiếm
+const page = ref(1); // Trang hiện tại
+const pageCount = ref(10); // Đổi thành 10 bài viết trên 1 trang
 
-// 3. Fetch dữ liệu từ API
+// Reset về trang 1 nếu người dùng gõ tìm kiếm
+watch(q, () => {
+    page.value = 1;
+});
+
+
+// 3. Gọi API (Sử dụng watch để Nuxt tự động reload khi biến thay đổi)
 const {
-    data: responses,
+    data: responseData,
     pending,
-    error: err,
+    refresh,
 } = await useFetch("/api/post/posts", {
     method: "GET",
+    query: {
+        page: page,
+        limit: pageCount,
+        q: q,
+    },
+    watch: [page, q, pageCount],
 });
 
-// 4. Logic xử lý dữ liệu (Filter + Sort)
-const filteredRows = computed(() => {
-    let data = responses.value?.data || [];
 
-    // Filter: Lọc theo tiêu đề (Title)
-    if (q.value) {
-        data = data.filter((post) => {
-            return post.title?.toLowerCase().includes(q.value.toLowerCase());
-        });
-    }
+// 5. Bóc tách trực tiếp dữ liệu từ API để đưa vào bảng
+// Chúng ta không dùng .filter hay .sort trên JS nữa, vì Backend đã (hoặc sẽ) làm việc đó
+const rows = computed(() => responseData.value?.data?.data || []);
+const totalRows = computed(
+    () => responseData.value?.data?.pagination?.total || 0,
+);
 
-    // Sort: Sắp xếp động
-    const { column, direction } = sort.value;
-    return [...data].sort((a, b) => {
-        const aValue = a[column];
-        const bValue = b[column];
-        const modifier = direction === "asc" ? 1 : -1;
-
-        if (aValue < bValue) return -1 * modifier;
-        if (aValue > bValue) return 1 * modifier;
-        return 0;
-    });
-});
-
-// 5. Định nghĩa các cột (Columns)
+// 6. Định nghĩa Cột (Giữ nguyên)
 const columns = [
     {
         accessorKey: "_id",
@@ -61,7 +60,6 @@ const columns = [
     {
         accessorKey: "title",
         header: "Tiêu đề",
-        sortable: true,
         cell: ({ row }) =>
             h(
                 "span",
@@ -84,7 +82,6 @@ const columns = [
     {
         accessorKey: "status",
         header: "Trạng thái",
-        sortable: true,
         cell: ({ row }) => {
             const isEnable = row.getValue("status") === "enable";
             return h(
@@ -101,7 +98,6 @@ const columns = [
     {
         accessorKey: "createdDate",
         header: "Thời gian",
-        sortable: true,
         cell: ({ row }) =>
             h(
                 "span",
@@ -125,18 +121,7 @@ const columns = [
     },
 ];
 
-// 6. Hàm Logout
-const handleLogout = async () => {
-    try {
-        await $fetch("/api/auth/logout", { method: "POST" });
-        clearSession();
-        await router.push("/login");
-    } catch (e) {
-        console.error("Logout failed", e);
-    }
-};
-
-// 7. Hành động trên từng dòng
+// 7. Xử lý hành động trên menu dòng
 function getRowItems(row) {
     return [
         [
@@ -144,12 +129,9 @@ function getRowItems(row) {
                 label: "Chỉnh sửa",
                 icon: "i-lucide-pencil",
                 onSelect: () => {
-                    // Chuyển hướng đến trang chi tiết với query id_post
                     navigateTo(
                         `/user/posts/detail?id_post=${row.original._id}`,
-                        {
-                            external: true, // Mở link ngoài nếu service.tdmk.vn khác domain hiện tại
-                        },
+                        { external: true },
                     );
                 },
             },
@@ -169,9 +151,10 @@ const deletePost = async (id) => {
     if (confirm("Bạn có chắc muốn xóa bài viết này?")) {
         try {
             await $fetch(`/api/post/${id}`, { method: "DELETE" });
-            refreshNuxtData();
+            refresh();
         } catch (e) {
             console.error("Xóa bài viết thất bại", e);
+            alert("Lỗi khi xóa bài viết!");
         }
     }
 };
@@ -203,7 +186,7 @@ const deletePost = async (id) => {
                         icon="i-lucide-refresh-cw"
                         color="neutral"
                         variant="outline"
-                        @click="refreshNuxtData()"
+                        @click="refresh()"
                     />
                     <UButton
                         label="Tạo bài mới"
@@ -214,29 +197,45 @@ const deletePost = async (id) => {
             </div>
 
             <UTable
-                v-model:sort="sort"
-                :data="filteredRows"
+                :data="rows"
                 :columns="columns"
                 :loading="pending"
-                sort-mode="manual"
                 class="flex-1"
             >
                 <template #empty-state>
                     <div
                         class="flex flex-col items-center justify-center py-10 gap-3"
                     >
+                        <UIcon
+                            name="i-lucide-file-question"
+                            class="w-10 h-10 text-gray-400"
+                        />
                         <span class="text-sm text-gray-500"
                             >Không tìm thấy bài viết nào.</span
                         >
                     </div>
                 </template>
             </UTable>
+
+            <div
+                v-if="totalRows > 0"
+                class="flex justify-between items-center px-4 py-3 border-t border-gray-200 dark:border-gray-800"
+            >
+                <span class="text-sm text-gray-500">
+                    Tổng cộng: <b>{{ totalRows }}</b> bài viết
+                </span>
+
+                <UPagination
+                    v-model:page="page"
+                    :page-count="pageCount"
+                    :total="totalRows"
+                />
+            </div>
         </template>
     </UDashboardPanel>
 </template>
 
 <style scoped>
-/* Tuỳ chỉnh chiều cao bảng để scroll mượt trong Dashboard */
 :deep(table) {
     width: 100%;
 }

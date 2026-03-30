@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
 
         return response.data;
     } catch (error: any) {
-        console.log("errr:", error);
         throw createError({
             statusCode: error.response?.status || 500,
             message:

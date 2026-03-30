@@ -70,9 +70,7 @@
 </template>
 <script setup>
 // Sử dụng definePageMeta để xử lý chuyển hướng ngay khi vào trang
-definePageMeta({
-    middleware: ["authenticated"],
-});
+
 
 const colorMode = useColorMode();
 

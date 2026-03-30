@@ -10,18 +10,29 @@
 
         <UPageBody>
             <div style="display: flex; flex-direction: column">
-                <NewsQuickNews
-                    :main="data.main"
-                    :posts="data.posts"
-                    :loading="pending"
-                />
+                <NewsQuickNews :posts="posts" :loading="pending" />
                 <NewsListNews />
             </div>
         </UPageBody>
     </LayoutPageLayout>
 </template>
 <script setup>
-const { data, pending, error } = await useFetch("/api/post/forum");
+const pendingPage = ref(false);
+
+const {
+    data: posts,
+    pending,
+    error,
+} = await useFetch("/api/post/postsCategory", {
+    method: "GET",
+    query: { id_category: "69c9eadfb09007343f9a77e1" },
+    transform: (response) => {
+        return response.data;
+    },
+});
+
+
+
 const links = ref([
     {
         label: "GitHub",
@@ -32,11 +43,7 @@ const links = ref([
 ]);
 </script>
 <script>
-export default {
-    data() {
-        return {};
-    },
-};
+export default {};
 </script>
 <style scoped>
 .bg_layout {
