@@ -33,6 +33,13 @@ export default defineNuxtConfig({
     compatibilityDate: "2025-07-15",
     devtools: { enabled: true },
     css: ["~/assets/css/main.css"],
+
+    colorMode: {
+        preference: "dark", // Thiết lập mặc định là dark
+        fallback: "dark", // Nếu không xác định được hệ điều hành thì dùng dark
+        storageKey: "nuxt-color-mode",
+    },
+    
     modules: [
         "@nuxtjs/i18n",
         "@nuxt/image",
