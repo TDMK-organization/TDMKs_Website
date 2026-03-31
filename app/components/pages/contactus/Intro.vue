@@ -5,7 +5,6 @@
         ></div>
 
         <UPageSection
-            icon="i-lucide-rocket"
             orientation="horizontal"
             :features="features"
             class="relative z-10"

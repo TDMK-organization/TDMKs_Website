@@ -75,15 +75,15 @@ const contactInfo = ref([
     },
     {
         title: "Đường dây nóng (Hotline)",
-        description: "0912 345 678", // Bạn thay bằng số thật nhé
+        description: "0385319701", // Bạn thay bằng số thật nhé
         icon: "i-heroicons-phone-arrow-up-right-20-solid",
-        to: "tel:0912345678", // Bấm vào tự động gọi điện
+        to: "tel:0385319701", // Bấm vào tự động gọi điện
     },
     {
         title: "Email hỗ trợ",
-        description: "contact@tdmk.vn", // Bạn thay bằng email thật nhé
+        description: "thuyht@tdmk.vn", // Bạn thay bằng email thật nhé
         icon: "i-heroicons-envelope-open-20-solid",
-        to: "mailto:contact@tdmk.vn", // Bấm vào tự động mở app gửi mail
+        to: "mailto:thuyht@tdmk.vn", // Bấm vào tự động mở app gửi mail
     },
 ]);
 </script>

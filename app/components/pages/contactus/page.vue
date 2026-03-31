@@ -25,7 +25,7 @@
         </div>
 
         <div class="relative w-full max-w-7xl mx-auto px-4 lg:px-8 pb-20 z-10">
-            <Header text="Thông tin liên hệ TDMK" class="mb-10 text-center" />
+            <Header text="Thông tin liên hệ chúng tôi" class="mb-10 text-center" />
 
             <div
                 class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 justify-center"
@@ -74,15 +74,15 @@ const contactInfo = ref([
     },
     {
         title: "Đường dây nóng (Hotline)",
-        description: "0912 345 678", // Bạn thay bằng số thật nhé
+        description: "0385319701", // Bạn thay bằng số thật nhé
         icon: "i-heroicons-phone-arrow-up-right-20-solid",
-        to: "tel:0912345678", // Bấm vào tự động gọi điện
+        to: "tel:0385319701", // Bấm vào tự động gọi điện
     },
     {
         title: "Email hỗ trợ",
-        description: "contact@tdmk.vn", // Bạn thay bằng email thật nhé
+        description: "thuyht@tdmk.vn", // Bạn thay bằng email thật nhé
         icon: "i-heroicons-envelope-open-20-solid",
-        to: "mailto:contact@tdmk.vn", // Bấm vào tự động mở app gửi mail
+        to: "mailto:thuyht@tdmk.vn", // Bấm vào tự động mở app gửi mail
     },
 ]);
 </script>
