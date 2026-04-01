@@ -18,6 +18,6 @@ onMounted(() => {
 </script>
 <template>
     <NuxtLayout>
-        <NuxtPage />
-    </NuxtLayout>
+        <NuxtPage /> </NuxtLayout
+    ><UNotifications />
 </template>

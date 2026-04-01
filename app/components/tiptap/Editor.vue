@@ -3,16 +3,18 @@ import { Extension } from '@tiptap/core'
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { ImageResizeExtension } from './ImageResizeExtension'
 
-const value = ref('')
+// 1. SỬA Ở ĐÂY: Thay vì dùng ref(''), hãy dùng defineModel để nhận dataForm.content từ ngoài vào
+const value = defineModel<string>()
 
 async function uploadImages(files: File[]): Promise<string[]> {
   const formData = new FormData()
   files.forEach((file) => formData.append('files', file))
-  const res = await $fetch<{ data: { url: string }[] }>('/api/uploads/multiple', {
+  const res = await $fetch<{ data: { url: string }[] }>('/api/post/upload', { // Nhớ check lại đúng đường dẫn API upload ảnh của bạn nhé
     method: 'POST',
     body: formData
   })
-  return res.data.map((f) => f.url)
+  // Đảm bảo API trả về đúng mảng url
+  return res.data ? res.data.map((f: any) => f.url) : [res.url] 
 }
 
 const ImageUploadExtension = Extension.create({
@@ -87,8 +89,14 @@ const customHandlers = {
         const files = Array.from(input.files ?? [])
         if (!files.length) return
         const urls = await uploadImages(files)
+        
         urls.forEach((url) => {
-          ;(editor.chain().focus() as any).setImage({ src: url, width: 400 }).run()
+          // 2. SỬA Ở ĐÂY: Dùng insertContent thay cho setImage
+          // Lệnh này tương thích với mọi node ảnh custom kể cả khi :image="false"
+          editor.chain().focus().insertContent({
+            type: 'image',
+            attrs: { src: url, width: 400 }
+          }).run()
         })
       }
       input.click()

@@ -66,7 +66,7 @@
                             </UFormField>
                         </div>
 
-                        <UFormField orientation="vertical" label="Nội dung yêu cầu">
+                        <UFormField orientation="vertical" label="Nội dung yêu cầu" required>
                             <UTextarea
                                 v-model="state.message"
                                 placeholder="Mô tả chi tiết vấn đề hoặc nhu cầu tư vấn của bạn..."
@@ -80,15 +80,15 @@
                             <UButton 
                                 type="submit" 
                                 size="lg"
+                                :loading="isLoading"
                                 class="w-full md:w-auto px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all flex justify-center"
                             > 
-                                Gửi thông tin
-                                <template #trailing>
+                                {{ isLoading ? 'Đang gửi...' : 'Gửi thông tin' }}
+                                <template #trailing v-if="!isLoading">
                                     <UIcon name="i-heroicons-paper-airplane" class="w-5 h-5 ml-2" />
                                 </template>
                             </UButton>
                         </div>
-
                     </UForm>
                 </div>
             </div>
@@ -97,9 +97,13 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 
-// 1. Gộp tất cả data vào một object state duy nhất để UForm dễ quản lý
+// 1. Khởi tạo chức năng thông báo của Nuxt UI
+const toast = useToast() 
+const isLoading = ref(false)
+
+// 2. State quản lý Form
 const state = reactive({
     name: '',
     email: '',
@@ -107,24 +111,61 @@ const state = reactive({
     message: ''
 })
 
-// 2. Hàm xử lý khi bấm nút Gửi
-const onSubmit = async (event) => {
-    // Ngăn load lại trang (UForm tự động làm việc này nhưng khai báo cho chắc)
-    event.preventDefault()
-    
-    
-    // Ở đây bạn có thể gọi API gửi email, ví dụ: $fetch('/api/send-email', { method: 'POST', body: state })
-    
-    alert('Cảm ơn bạn! Thông tin đã được gửi đến TDMK.')
-    
-    // Reset form sau khi gửi
-    state.name = ''
-    state.email = ''
-    state.phone = ''
-    state.message = ''
+// 3. Hàm xử lý gửi Form
+const onSubmit = async () => {
+    // Validate cơ bản nếu người dùng cố tình lách required của HTML
+    if (!state.name || !state.email || !state.phone || !state.message) {
+        toast.add({
+            title: 'Thiếu thông tin',
+            description: 'Vui lòng điền đầy đủ các trường bắt buộc.',
+            color: 'red',
+            icon: 'i-heroicons-exclamation-circle'
+        })
+        return;
+    }
+
+    // Map dữ liệu chuẩn với API Body của TDMK
+    const payload = {
+        fullname: state.name,
+        email: state.email,
+        phone: state.phone,
+        content: state.message
+    }
+
+    isLoading.value = true
+
+    try {
+        // Gửi data lên server Nuxt (file server/api/reports/index.post.ts)
+        await $fetch('/api/report', { 
+            method: 'POST', 
+            body: payload 
+        })
+        
+        // Hiện thông báo thành công xanh lá cây góc màn hình
+        toast.add({
+            title: 'Thành công!',
+            description: 'Cảm ơn bạn. Yêu cầu đã được gửi đến bộ phận CSKH của TDMK.',
+            color: 'green',
+            icon: 'i-heroicons-check-circle'
+        })
+        
+        // Xóa sạch form sau khi gửi
+        state.name = ''
+        state.email = ''
+        state.phone = ''
+        state.message = ''
+        
+    } catch (error) {
+        console.error("Lỗi khi gửi form:", error)
+        // Hiện thông báo lỗi màu đỏ góc màn hình
+        toast.add({
+            title: 'Có lỗi xảy ra',
+            description: 'Không thể gửi thông tin lúc này. Vui lòng thử lại sau.',
+            color: 'red',
+            icon: 'i-heroicons-x-circle'
+        })
+    } finally {
+        isLoading.value = false
+    }
 }
 </script>
-
-<style scoped>
-/* Không cần dùng CSS tay nữa vì Tailwind đã lo hết phần layout (flex, grid, w-full, v.v.) */
-</style>

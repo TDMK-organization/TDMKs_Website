@@ -16,7 +16,7 @@ const postId = computed(() => route.query.id_post);
 const dataForm = ref({
     _id: "",
     title: "",
-    slug: "", 
+    slug: "",
     description: "",
     thumbnail: "",
     content: "",
@@ -32,19 +32,21 @@ const dataForm = ref({
 // ==========================================
 const generateSlug = (text) => {
     if (!text) return "";
-    return text.toString().toLowerCase()
-        .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a')
-        .replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e')
-        .replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i')
-        .replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o')
-        .replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u')
-        .replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y')
-        .replace(/đ/gi, 'd')
-        .replace(/\s+/g, '-') // Thay khoảng trắng bằng gạch nối
-        .replace(/[^\w\-]+/g, '') // Xóa các ký tự đặc biệt
-        .replace(/\-\-+/g, '-') // Xóa nhiều gạch nối liên tiếp
-        .replace(/^-+/, '') // Xóa gạch nối ở đầu
-        .replace(/-+$/, ''); // Xóa gạch nối ở cuối
+    return text
+        .toString()
+        .toLowerCase()
+        .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, "a")
+        .replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, "e")
+        .replace(/i|í|ì|ỉ|ĩ|ị/gi, "i")
+        .replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, "o")
+        .replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, "u")
+        .replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, "y")
+        .replace(/đ/gi, "d")
+        .replace(/\s+/g, "-") // Thay khoảng trắng bằng gạch nối
+        .replace(/[^\w\-]+/g, "") // Xóa các ký tự đặc biệt
+        .replace(/\-\-+/g, "-") // Xóa nhiều gạch nối liên tiếp
+        .replace(/^-+/, "") // Xóa gạch nối ở đầu
+        .replace(/-+$/, ""); // Xóa gạch nối ở cuối
 };
 
 // ==========================================
@@ -77,7 +79,8 @@ const handleUploadThumbnail = async (event) => {
         }
     } catch (err) {
         console.error("Lỗi gọi API nội bộ:", err);
-        const errMsg = err.response?._data?.statusMessage || "Upload ảnh thất bại.";
+        const errMsg =
+            err.response?._data?.statusMessage || "Upload ảnh thất bại.";
         alert(errMsg);
     } finally {
         isUploading.value = false;
@@ -88,7 +91,8 @@ const handleUploadThumbnail = async (event) => {
 // ==========================================
 // 2. FETCH DANH SÁCH DANH MỤC
 // ==========================================
-const { data: categoriesData, pending: pendingCat } = await useFetch("/api/category/list");
+const { data: categoriesData, pending: pendingCat } =
+    await useFetch("/api/category/list");
 
 const categories = computed(() => {
     const list = categoriesData.value?.categories || [];
@@ -110,13 +114,12 @@ const { data: dataPost, pending: pendingPost } = await useFetch(
         key: `post-detail-${postId.value}`,
         query: { id_post: postId },
         onResponse({ response }) {
-            console.log("Thành công", response);  
             if (response.status === 200) {
                 const post = response._data;
                 dataForm.value = {
                     _id: post._id,
                     title: post.title,
-                    slug: post.slug , // Gắn slug từ DB
+                    slug: post.slug, // Gắn slug từ DB
                     description: post.description,
                     content: post.content,
                     thumbnail: post.thumbnail,
@@ -164,7 +167,7 @@ watch(
         if (newTitle && !dataForm.value.slug) {
             dataForm.value.slug = generateSlug(newTitle);
         }
-    }
+    },
 );
 
 // ==========================================
@@ -249,7 +252,10 @@ const handleUpdatePost = async () => {
                             />
                         </UFormField>
 
-                        <UFormField label="Đường dẫn tĩnh (Slug)" help="URL thân thiện cho SEO">
+                        <UFormField
+                            label="Đường dẫn tĩnh (Slug)"
+                            help="URL thân thiện cho SEO"
+                        >
                             <UInput
                                 class="w-full"
                                 icon="i-heroicons-link"
@@ -311,8 +317,12 @@ const handleUpdatePost = async () => {
                     </div>
                 </div>
 
-                <div class="flex-1 p-4 overflow-y-auto bg-white dark:bg-gray-900">
-                    <div class="mb-2.5 text-sm font-semibold text-primary flex items-center gap-1.5">
+                <div
+                    class="flex-1 p-4 overflow-y-auto bg-white dark:bg-gray-900"
+                >
+                    <div
+                        class="mb-2.5 text-sm font-semibold text-primary flex items-center gap-1.5"
+                    >
                         <UIcon name="ph:tag-light" />
                         <span>{{
                             categories.find((c) => c.id === selectedId)
@@ -320,11 +330,16 @@ const handleUpdatePost = async () => {
                         }}</span>
                     </div>
 
-                    <div class="text-3xl sm:text-4xl text-pretty font-bold text-highlighted">
+                    <div
+                        class="text-3xl sm:text-4xl text-pretty font-bold text-highlighted"
+                    >
                         <span>{{ dataForm.title }}</span>
                     </div>
-                    
-                    <div class="text-sm text-gray-400 mt-2 flex items-center gap-1" v-if="dataForm.slug">
+
+                    <div
+                        class="text-sm text-gray-400 mt-2 flex items-center gap-1"
+                        v-if="dataForm.slug"
+                    >
                         <UIcon name="i-heroicons-link" class="w-4 h-4" />
                         <span>tdmk.vn/post/{{ dataForm.slug }}</span>
                     </div>
@@ -339,7 +354,9 @@ const handleUpdatePost = async () => {
                             v-model="dataForm.content"
                         />
                         <template #fallback>
-                            <div class="h-40 mt-6 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded-md flex items-center justify-center text-sm text-gray-500">
+                            <div
+                                class="h-40 mt-6 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded-md flex items-center justify-center text-sm text-gray-500"
+                            >
                                 Đang tải trình soạn thảo...
                             </div>
                         </template>
