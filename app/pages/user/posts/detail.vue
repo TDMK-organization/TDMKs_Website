@@ -12,9 +12,11 @@ const editorRef = ref(null);
 const isUploading = ref(false);
 const postId = computed(() => route.query.id_post);
 
+// BỔ SUNG TRƯỜNG slug VÀO dataForm
 const dataForm = ref({
     _id: "",
     title: "",
+    slug: "", 
     description: "",
     thumbnail: "",
     content: "",
@@ -26,6 +28,26 @@ const dataForm = ref({
 });
 
 // ==========================================
+// HÀM TẠO SLUG TỰ ĐỘNG (Bỏ dấu tiếng Việt)
+// ==========================================
+const generateSlug = (text) => {
+    if (!text) return "";
+    return text.toString().toLowerCase()
+        .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a')
+        .replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e')
+        .replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i')
+        .replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o')
+        .replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u')
+        .replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y')
+        .replace(/đ/gi, 'd')
+        .replace(/\s+/g, '-') // Thay khoảng trắng bằng gạch nối
+        .replace(/[^\w\-]+/g, '') // Xóa các ký tự đặc biệt
+        .replace(/\-\-+/g, '-') // Xóa nhiều gạch nối liên tiếp
+        .replace(/^-+/, '') // Xóa gạch nối ở đầu
+        .replace(/-+$/, ''); // Xóa gạch nối ở cuối
+};
+
+// ==========================================
 // 1. HÀM XỬ LÝ UPLOAD ẢNH THUMBNAIL
 // ==========================================
 const handleUploadThumbnail = async (event) => {
@@ -34,12 +56,11 @@ const handleUploadThumbnail = async (event) => {
 
     if (!file.type.startsWith("image/")) {
         alert("Vui lòng chọn file hình ảnh hợp lệ!");
-        event.target.value = ""; // Reset input
+        event.target.value = "";
         return;
     }
 
     isUploading.value = true;
-
     const formData = new FormData();
     formData.append("files", file);
 
@@ -56,20 +77,18 @@ const handleUploadThumbnail = async (event) => {
         }
     } catch (err) {
         console.error("Lỗi gọi API nội bộ:", err);
-        const errMsg =
-            err.response?._data?.statusMessage || "Upload ảnh thất bại.";
+        const errMsg = err.response?._data?.statusMessage || "Upload ảnh thất bại.";
         alert(errMsg);
     } finally {
         isUploading.value = false;
-        event.target.value = ""; // Rất quan trọng: Reset input để cho phép up lại chính file đó nếu lỡ xóa
+        event.target.value = "";
     }
 };
 
 // ==========================================
 // 2. FETCH DANH SÁCH DANH MỤC
 // ==========================================
-const { data: categoriesData, pending: pendingCat } =
-    await useFetch("/api/category/list");
+const { data: categoriesData, pending: pendingCat } = await useFetch("/api/category/list");
 
 const categories = computed(() => {
     const list = categoriesData.value?.categories || [];
@@ -91,11 +110,13 @@ const { data: dataPost, pending: pendingPost } = await useFetch(
         key: `post-detail-${postId.value}`,
         query: { id_post: postId },
         onResponse({ response }) {
+            console.log("Thành công", response);  
             if (response.status === 200) {
                 const post = response._data;
                 dataForm.value = {
                     _id: post._id,
                     title: post.title,
+                    slug: post.slug , // Gắn slug từ DB
                     description: post.description,
                     content: post.content,
                     thumbnail: post.thumbnail,
@@ -127,13 +148,23 @@ watch(
     dataPost,
     (newVal) => {
         if (newVal && newVal.content) {
-            dataForm.value = { ...newVal };
+            dataForm.value = { ...newVal, slug: newVal.slug || "" };
             if (newVal.category?._id) {
                 selectedId.value = newVal.category._id;
             }
         }
     },
     { immediate: true },
+);
+
+// Tự động tạo slug khi người dùng nhập Tiêu đề (nếu slug đang trống)
+watch(
+    () => dataForm.value.title,
+    (newTitle) => {
+        if (newTitle && !dataForm.value.slug) {
+            dataForm.value.slug = generateSlug(newTitle);
+        }
+    }
 );
 
 // ==========================================
@@ -143,6 +174,7 @@ const handleUpdatePost = async () => {
     try {
         const payload = {
             title: dataForm.value.title,
+            slug: dataForm.value.slug, // Truyền slug lên server
             description: dataForm.value.description,
             content: dataForm.value.content,
             category: selectedId.value,
@@ -211,10 +243,18 @@ const handleUpdatePost = async () => {
                             <UInput
                                 class="w-full"
                                 :ui="{
-                                    base: 'text-3xl sm:text-4xl text-pretty font-bold text-highlighted',
+                                    base: 'text-xl font-bold text-highlighted',
                                 }"
-                                size="xl"
                                 v-model="dataForm.title"
+                            />
+                        </UFormField>
+
+                        <UFormField label="Đường dẫn tĩnh (Slug)" help="URL thân thiện cho SEO">
+                            <UInput
+                                class="w-full"
+                                icon="i-heroicons-link"
+                                placeholder="nhap-duong-dan-bai-viet"
+                                v-model="dataForm.slug"
                             />
                         </UFormField>
 
@@ -259,7 +299,7 @@ const handleUpdatePost = async () => {
                                 :ui="{
                                     base: 'text-lg text-pretty text-muted mt-4',
                                 }"
-                                :rows="12"
+                                :rows="8"
                                 v-model="dataForm.description"
                             />
                         </UFormField>
@@ -271,12 +311,8 @@ const handleUpdatePost = async () => {
                     </div>
                 </div>
 
-                <div
-                    class="flex-1 p-4 overflow-y-auto bg-white dark:bg-gray-900"
-                >
-                    <div
-                        class="mb-2.5 text-sm font-semibold text-primary flex items-center gap-1.5"
-                    >
+                <div class="flex-1 p-4 overflow-y-auto bg-white dark:bg-gray-900">
+                    <div class="mb-2.5 text-sm font-semibold text-primary flex items-center gap-1.5">
                         <UIcon name="ph:tag-light" />
                         <span>{{
                             categories.find((c) => c.id === selectedId)
@@ -284,10 +320,13 @@ const handleUpdatePost = async () => {
                         }}</span>
                     </div>
 
-                    <div
-                        class="text-3xl sm:text-4xl text-pretty font-bold text-highlighted"
-                    >
+                    <div class="text-3xl sm:text-4xl text-pretty font-bold text-highlighted">
                         <span>{{ dataForm.title }}</span>
+                    </div>
+                    
+                    <div class="text-sm text-gray-400 mt-2 flex items-center gap-1" v-if="dataForm.slug">
+                        <UIcon name="i-heroicons-link" class="w-4 h-4" />
+                        <span>tdmk.vn/post/{{ dataForm.slug }}</span>
                     </div>
 
                     <div class="text-lg text-pretty text-muted mt-4">
@@ -300,9 +339,7 @@ const handleUpdatePost = async () => {
                             v-model="dataForm.content"
                         />
                         <template #fallback>
-                            <div
-                                class="h-40 mt-6 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded-md flex items-center justify-center text-sm text-gray-500"
-                            >
+                            <div class="h-40 mt-6 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded-md flex items-center justify-center text-sm text-gray-500">
                                 Đang tải trình soạn thảo...
                             </div>
                         </template>

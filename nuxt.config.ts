@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     ssr: true,
     app: {
         head: {
-            title: "TDMK Service - Beside your mine",
+            title: "TDMK Service - Beside your mind",
             link: [
                 // Đường dẫn đến favicon
                 { rel: "icon", type: "image/x-icon", href: "/TDMKLogoB.svg" },
@@ -39,14 +39,24 @@ export default defineNuxtConfig({
         fallback: "dark", // Nếu không xác định được hệ điều hành thì dùng dark
         storageKey: "nuxt-color-mode",
     },
-    
+
     modules: [
+        "@nuxtjs/sitemap",
+        "nuxt-simple-robots",
         "@nuxtjs/i18n",
         "@nuxt/image",
         "@nuxt/ui",
         "nuxt-auth-utils",
         "@nuxtjs/seo",
     ],
+    sitemap: {
+        // Liệt kê các trang tĩnh (Home, About, Contact, v.v.)
+        // Nuxt thường tự nhận diện trang tĩnh, nhưng khai báo thêm sẽ chắc chắn hơn
+        exclude: ["/user/**", "/auth/**"],
+
+        // Nguồn cấp link động (dành cho các bài viết, sản phẩm)
+        sources: ["/api/_sitemap-urls"],
+    },
     // cấu hình seo
     site: {
         url: "https://service.tdmk.vn", // RẤT QUAN TRỌNG: Thay bằng domain thật của bạn
@@ -54,6 +64,10 @@ export default defineNuxtConfig({
         description:
             "Nền tảng tiên phong cho lộ trình chuyển đổi số nhà máy 4.0 và AI Vision.",
         defaultLocale: "vi", // Khai báo ngôn ngữ mặc định là Tiếng Việt
+    },
+    robots: {
+        disallow: ["/admin", "/api", "/user", "/auth"], // Ẩn các trang quản trị và API không cho Google index
+        allow: "/",
     },
     seo: {
         redirectToCanonicalSiteUrl: true, // Tự động redirect về domain chính nếu gõ sai (ví dụ từ www về non-www)

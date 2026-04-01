@@ -71,14 +71,13 @@
 <script setup>
 // Sử dụng definePageMeta để xử lý chuyển hướng ngay khi vào trang
 
-
 const colorMode = useColorMode();
 
 const user = ref({
-    name: "Benjamin Canac",
+    name: "Admin",
     avatar: {
-        src: "https://github.com/benjamincanac.png",
-        alt: "Benjamin Canac",
+        src: "https://github.com/TDMK-organization",
+        alt: "Admin",
     },
 });
 
@@ -138,16 +137,15 @@ const userItems = computed(() => [
         {
             label: "GitHub",
             icon: "i-simple-icons-github",
-            to: "https://github.com/nuxt/ui",
+            to: "https://github.com/TDMK-organization",
             target: "_blank",
         },
         {
             label: "Log out",
             icon: "i-lucide-log-out",
-            onSelect(){
-                handleLogout()
-            }
-
+            onSelect() {
+                handleLogout();
+            },
         },
     ],
 ]);
@@ -156,9 +154,9 @@ const { clear, loggedIn } = useUserSession();
 const router = useRouter();
 
 const handleLogout = async () => {
-  await $fetch('/api/auth/logout', { method: 'POST' });
-  clear();
-  await router.push('/auth');
+    await $fetch("/api/auth/logout", { method: "POST" });
+    clear();
+    await router.push("/auth");
 };
 </script>
 <script>
@@ -171,7 +169,6 @@ export default {
                     {
                         label: "Home",
                         icon: "i-lucide-house",
-                        active: true,
                         to: {
                             path: "/user",
                         },
@@ -179,31 +176,18 @@ export default {
                     {
                         label: "Inbox",
                         icon: "i-lucide-inbox",
-                        badge: "4",
+                        to: {
+                            path: "/user/inboxs",
+                        },
                     },
-                    {
-                        label: "Contacts",
-                        icon: "i-lucide-users",
-                    },
+
                     {
                         label: "Danh sách bài viết",
                         icon: "i-lucide-settings",
                         defaultOpen: true,
-                        children: [
-                            {
-                                label: "New post",
-                                to: {
-                                    path: "/user/posts/create",
-                                },
-                            },
-                            {
-                                label: "List Posts",
-                                to: {
-                                    path: "/user/posts",
-                                },
-                            },
-                            
-                        ],
+                        to: {
+                            path: "/user/posts",
+                        },
                     },
                 ],
                 [

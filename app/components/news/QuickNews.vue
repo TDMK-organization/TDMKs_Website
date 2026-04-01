@@ -19,7 +19,7 @@ const props = defineProps({
             <UPageCard
                 :title="posts[0].title"
                 :description="posts[0].description"
-                :to="`/post/${posts[0]._id}`"
+                :to="`/post/${posts[0].slug || posts[0]._id}`"
                 icon="i-simple-icons-tailwindcss"
                 orientation="vertical"
                 reverse
@@ -43,7 +43,7 @@ const props = defineProps({
             <UPageCard
                 v-for="(item, index) in posts.slice(1, 4)"
                 :key="index"
-                :to="`/post/${item._id}`"
+                :to="`/post/${item.slug || item._id}`"
                 orientation="horizontal"
                 reverse
                 class="flex-1"

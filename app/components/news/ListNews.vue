@@ -18,7 +18,7 @@ const props = defineProps({
         <UPageCard
             v-for="(item, index) in posts"
             :key="index"
-            :to="`/post/${item._id}`"
+            :to="`/post/${item.slug || item._id}`"
             orientation="horizontal"
             reverse
             class="flex-1 group"

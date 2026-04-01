@@ -20,12 +20,13 @@ watch(q, () => {
     page.value = 1;
 });
 
+
 // 3. Gọi API (Sử dụng watch để Nuxt tự động reload khi biến thay đổi)
 const {
     data: responseData,
     pending,
     refresh,
-} = await useFetch("/api/post/posts", {
+} = await useFetch("/api/report/all", {
     method: "GET",
     query: {
         page: page,
@@ -35,8 +36,8 @@ const {
     watch: [page, q, pageCount],
 });
 
+
 // 5. Bóc tách trực tiếp dữ liệu từ API để đưa vào bảng
-// Chúng ta không dùng .filter hay .sort trên JS nữa, vì Backend đã (hoặc sẽ) làm việc đó
 const rows = computed(() => responseData.value?.data?.data || []);
 const totalRows = computed(
     () => responseData.value?.data?.pagination?.total || 0,
@@ -161,7 +162,7 @@ const deletePost = async (id) => {
 <template>
     <UDashboardPanel grow>
         <template #header>
-            <UDashboardNavbar title="Quản lý bài viết (S-RMS)">
+            <UDashboardNavbar title="Quản lý report">
                 <template #leading>
                     <UDashboardSidebarCollapse />
                 </template>
@@ -190,7 +191,6 @@ const deletePost = async (id) => {
                         label="Tạo bài mới"
                         icon="i-lucide-plus"
                         color="primary"
-                        to="/user/posts/create"
                     />
                 </div>
             </div>
