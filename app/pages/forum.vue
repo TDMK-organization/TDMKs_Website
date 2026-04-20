@@ -138,12 +138,6 @@ const onPageChange = () => {
 
 const links = [
     {
-        label: "GitHub Organization",
-        icon: "i-simple-icons-github",
-        to: "https://github.com/TDMK-organization",
-        target: "_blank",
-    },
-    {
         label: "Hỗ trợ Zalo",
         icon: "i-lucide-message-circle",
         to: "https://zalo.me/0385319701",
