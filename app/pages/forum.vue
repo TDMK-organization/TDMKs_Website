@@ -140,7 +140,7 @@ const links = [
     {
         label: "Hỗ trợ Zalo",
         icon: "i-lucide-message-circle",
-        to: "https://zalo.me/0385319701",
+        to: "https://zalo.me/0879889000",
         target: "_blank",
     },
 ];
